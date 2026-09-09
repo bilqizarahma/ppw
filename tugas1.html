@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=4418a689" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
   
   <!-- So that users can add custom icons -->
   <script defer src="_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
@@ -354,7 +354,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p>#<strong>Install Library</strong></p>
+  <p>#<strong>Tugas 1 - Scraping Berita Detikcom</strong></p>
+<p><strong>Install Library</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">requests</span> <span class="n">beautifulsoup4</span> <span class="n">pandas</span> <span class="n">openpyxl</span> <span class="n">tqdm</span> <span class="n">trafilatura</span>
@@ -435,7 +436,7 @@ Note: you may need to restart the kernel to use updated packages.
 </div>
 </div>
 <p>Code diatas berfungsi untuk menginstall pustaka pustaka pyhton yang dibutuhkan ke dalam lingkungan kerja seperti google colab, mencakup request untuk mengirim permintaan HTTP, beautifulsoup4 dan trafilatura untuk scraping serta ekstraksi konten web, pandas dan openpyxl untuk pengolahan data serta pembuatan file excel, serta tqdm untuk menampilkan indikator proses.</p>
-<p>#<strong>Ambil Isi Artikel Lengkap Menggunakan trafilatura (tqdm + Paginasi)</strong></p>
+<p><strong>Ambil Isi Artikel Lengkap Menggunakan trafilatura (tqdm + Paginasi)</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -600,7 +601,7 @@ Note: you may need to restart the kernel to use updated packages.
 </div>
 </div>
 <p>Code tersebut berfungsi untuk melakukan web scraping artikel berita dari Detik.com dengan kategori “Sport” dan “Finance” dengan masing masing label berjumlah 100 artikel dengan memanfaatkan pustaka trafilatura untuk mengekstrak dan membersihkan teks artikel secara otomatis dari mode single-page, lalu menyusun seluruh data bersih tersebut kedalam sebuah DataFrame pandas yang rapi dengan 3 kolom (ID, Isi Berita&lt; Label).</p>
-<p>#<strong>Save &amp; Download File Excel</strong></p>
+<p><strong>Save &amp; Download File Excel</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">excel_filename</span> <span class="o">=</span> <span class="s2">"berita_detik_200_artikel.xlsx"</span>
