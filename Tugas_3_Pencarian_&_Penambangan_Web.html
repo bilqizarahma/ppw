@@ -1,0 +1,2679 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Klasifikasi Berita Menggunakan Model Word2Vec (Skip-Gram) dan Algoritma Gaussian Naive Bayes &#8212; Pencarian &amp; Penambangan Web</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Tugas_3_Pencarian_&_Penambangan_Web';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Praproses Teks, Representasi TF-IDF, dan Reduksi Dimensi PCA" href="Prepocessing_Tugas_2_PPW.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.jpeg" class="logo__image only-light" alt="Pencarian & Penambangan Web - Home"/>
+    <script>document.write(`<img src="_static/foto.jpeg" class="logo__image only-dark" alt="Pencarian & Penambangan Web - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Profile Repository
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Scraping%20Berita%20Detikcom_Tugas%201%20PPW.html">Crawling Berita Detikcom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prepocessing_Tugas_2_PPW.html">Praproses Teks, Representasi TF-IDF, dan Reduksi Dimensi PCA</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Klasifikasi Berita Menggunakan Model Word2Vec (Skip-Gram) dan Algoritma Gaussian Naive Bayes</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Tugas_3_Pencarian_&_Penambangan_Web.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Klasifikasi Berita Menggunakan Model Word2Vec (Skip-Gram) dan Algoritma Gaussian Naive Bayes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membaca-dataset-excel">Membaca dataset Excel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-dataset">Mengecek dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-data-kosong">Menghapus data kosong</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-case-folding">Melakukan Case Folding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-tanda-baca">Menghapus tanda baca</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-angka">Menghapus angka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membersihkan-spasi">Membersihkan spasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-tokenisasi">Melakukan Tokenisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-stopword">Melakukan Stopword</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-stopword">Menghapus Stopword</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-stemmer">Melakukan Stemmer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-stemming">Melakukan Stemming</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-jumlah-kata-unik-sebelum-dilakukan-preprocessing">Menghitung jumlah kata unik sebelum dilakukan preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-jumlah-kata-unik-setelah-dilakukan-preprocessing">Menghitung jumlah kata unik setelah dilakukan preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-hasil-preprocessing">Melihat hasil preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-corpus-untuk-word2vec">Membuat corpus untuk Word2Vec</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec-skip-gram">Word2Vec Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-vector-sebuah-kata">Melihat vector sebuah kata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-kata-yang-mirip">Melihat kata yang mirip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengubah-setiap-berita-menjadi-vector">Mengubah setiap berita menjadi vector</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-bentuk-vector-dokumen">Melihat bentuk vector dokumen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-target-label">Membuat target label</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membagi-data-160-train-dan-40-test">Membagi data 160 train dan 40 test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-model-gaussian-naive-bayes">Membuat model Gaussian Naive Bayes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-data-testing">Prediksi data testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-hasil-prediksi">Tabel hasil prediksi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy">Accuracy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-recall-f1-score">Precision, Recall, F1-Score</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-report">Classification Report</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-matrix">Confusion Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-confusion-matrix">Visualisasi Confusion Matrix</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="klasifikasi-berita-menggunakan-model-word2vec-skip-gram-dan-algoritma-gaussian-naive-bayes">
+<h1>Klasifikasi Berita Menggunakan Model Word2Vec (Skip-Gram) dan Algoritma Gaussian Naive Bayes<a class="headerlink" href="#klasifikasi-berita-menggunakan-model-word2vec-skip-gram-dan-algoritma-gaussian-naive-bayes" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install pandas openpyxl Sastrawi gensim scikit-learn matplotlib seaborn
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pandas in /usr/local/lib/python3.13/dist-packages (2.2.3)
+Requirement already satisfied: openpyxl in /usr/local/lib/python3.13/dist-packages (3.1.5)
+Requirement already satisfied: Sastrawi in /usr/local/lib/python3.13/dist-packages (1.0.1)
+Requirement already satisfied: gensim in /usr/local/lib/python3.13/dist-packages (4.4.0)
+Requirement already satisfied: scikit-learn in /usr/local/lib/python3.13/dist-packages (1.6.1)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.13/dist-packages (3.10.0)
+Requirement already satisfied: seaborn in /usr/local/lib/python3.13/dist-packages (0.13.2)
+Requirement already satisfied: numpy&gt;=1.26.0 in /usr/local/lib/python3.13/dist-packages (from pandas) (2.1.3)
+Requirement already satisfied: python-dateutil&gt;=2.8.2 in /usr/local/lib/python3.13/dist-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: pytz&gt;=2020.1 in /usr/local/lib/python3.13/dist-packages (from pandas) (2025.2)
+Requirement already satisfied: tzdata&gt;=2022.7 in /usr/local/lib/python3.13/dist-packages (from pandas) (2026.4)
+Requirement already satisfied: et-xmlfile in /usr/local/lib/python3.13/dist-packages (from openpyxl) (2.0.0)
+Requirement already satisfied: scipy&gt;=1.7.0 in /usr/local/lib/python3.13/dist-packages (from gensim) (1.16.3)
+Requirement already satisfied: smart_open&gt;=1.8.1 in /usr/local/lib/python3.13/dist-packages (from gensim) (8.0.1)
+Requirement already satisfied: joblib&gt;=1.2.0 in /usr/local/lib/python3.13/dist-packages (from scikit-learn) (1.6.0)
+Requirement already satisfied: threadpoolctl&gt;=3.1.0 in /usr/local/lib/python3.13/dist-packages (from scikit-learn) (3.7.0)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.13/dist-packages (from matplotlib) (1.4.0)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.13/dist-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.13/dist-packages (from matplotlib) (4.65.0)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /usr/local/lib/python3.13/dist-packages (from matplotlib) (1.5.1)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.13/dist-packages (from matplotlib) (26.3)
+Requirement already satisfied: pillow&gt;=8 in /usr/local/lib/python3.13/dist-packages (from matplotlib) (11.3.0)
+Requirement already satisfied: pyparsing&gt;=2.3.1 in /usr/local/lib/python3.13/dist-packages (from matplotlib) (3.3.2)
+Requirement already satisfied: cloudpickle&gt;=3.0 in /usr/local/lib/python3.13/dist-packages (from joblib&gt;=1.2.0-&gt;scikit-learn) (3.1.2)
+Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.13/dist-packages (from python-dateutil&gt;=2.8.2-&gt;pandas) (1.17.0)
+Requirement already satisfied: wrapt in /usr/local/lib/python3.13/dist-packages (from smart_open&gt;=1.8.1-&gt;gensim) (2.4.1)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="import-library">
+<h2>Import library<a class="headerlink" href="#import-library" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">Sastrawi.StopWordRemover.StopWordRemoverFactory</span><span class="w"> </span><span class="kn">import</span> <span class="n">StopWordRemoverFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Sastrawi.Stemmer.StemmerFactory</span><span class="w"> </span><span class="kn">import</span> <span class="n">StemmerFactory</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">gensim.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Word2Vec</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">GaussianNB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">accuracy_score</span><span class="p">,</span>
+    <span class="n">precision_score</span><span class="p">,</span>
+    <span class="n">recall_score</span><span class="p">,</span>
+    <span class="n">f1_score</span><span class="p">,</span>
+    <span class="n">confusion_matrix</span><span class="p">,</span>
+    <span class="n">classification_report</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Semua library berhasil diimport."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Semua library berhasil diimport.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="membaca-dataset-excel">
+<h2>Membaca dataset Excel<a class="headerlink" href="#membaca-dataset-excel" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_path</span> <span class="o">=</span> <span class="s2">"berita_detik_200_artikel.xlsx"</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Dataset berhasil dibaca."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran dataset:"</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dataset berhasil dibaca.
+Ukuran dataset: (200, 3)
+</pre></div>
+</div>
+<div class="output text_html">
+  <div id="df-4f32e2b5-60ea-42de-90a4-6c32cd498b12" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>isi_berita</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Kejuaraan Nasional Gokart 2026 yang berlangsun...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>PT Bank Negara Indonesia (Persero) Tbk atau BN...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Pelatih Timnas voli putra Indonesia, Reidel To...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Kontingen Indonesia bersiap menatap Asian Game...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Rizki Juniansyah siap menjalani debut di Asian...</td>
+      <td>sport</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-4f32e2b5-60ea-42de-90a4-6c32cd498b12')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-4f32e2b5-60ea-42de-90a4-6c32cd498b12 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-4f32e2b5-60ea-42de-90a4-6c32cd498b12');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="mengecek-dataset">
+<h2>Mengecek dataset<a class="headerlink" href="#mengecek-dataset" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah baris :"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah kolom :"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Nama kolom:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Jumlah label:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Data kosong:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah baris : 200
+Jumlah kolom : 3
+
+Nama kolom:
+['id', 'isi_berita', 'label']
+
+Jumlah label:
+label
+sport      100
+finance    100
+Name: count, dtype: int64
+
+Data kosong:
+id            0
+isi_berita    0
+label         0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="menghapus-data-kosong">
+<h2>Menghapus data kosong<a class="headerlink" href="#menghapus-data-kosong" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">"isi_berita"</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Setelah menghapus data kosong:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah data:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Data kosong:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">"isi_berita"</span><span class="p">,</span> <span class="s2">"label"</span><span class="p">]]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Setelah menghapus data kosong:
+Jumlah data: 200
+
+Data kosong:
+isi_berita    0
+label         0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk membersihkan dataset dari nilai kosong (missing values) pada kolom kritis, yaitu isi_berita dan label. Langkah pembersihan ini sangat penting dilakukan sebelum memasuki tahap pemrosesan teks (preprocessing) dan pemodelan, agar tidak timbul error akibat data bernilai NaN/kosong saat diolah oleh library NLP. Melalui fungsi dropna(), baris data yang kehilangan informasi teks atau kategorinya dihapus secara otomatis, dilanjutkan dengan mencetak total data tersisa serta memastikan kembali bahwa jumlah data kosong di kedua kolom tersebut sudah benar-benar nol.</p>
+</section>
+<section id="melakukan-case-folding">
+<h2>Melakukan Case Folding<a class="headerlink" href="#melakukan-case-folding" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"case_folding"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"isi_berita"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sebelum dilakukan case folding:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"isi_berita"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Setelah dilakukan case folding:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"case_folding"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sebelum dilakukan case folding:
+Kejuaraan Nasional Gokart 2026 yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir. Romy Tahrizi berhasil menjadi Juara Nasional Shifter 150 tahun 2026 bersama Dewa United Motorsport setelah melalui perjuangan sepanjang musim. Kepastian tersebut diraih Romy pada Final Race Round 6 yang berlangsung pada 5-6 September 2026. Sebelumnya, pembalap yang juga berprofesi sebagai Lawyer di Kantor AHHN Lawyers tersebut masih menempati posisi kedua klasemen sementara deng
+
+Setelah dilakukan case folding:
+kejuaraan nasional gokart 2026 yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir. romy tahrizi berhasil menjadi juara nasional shifter 150 tahun 2026 bersama dewa united motorsport setelah melalui perjuangan sepanjang musim. kepastian tersebut diraih romy pada final race round 6 yang berlangsung pada 5-6 september 2026. sebelumnya, pembalap yang juga berprofesi sebagai lawyer di kantor ahhn lawyers tersebut masih menempati posisi kedua klasemen sementara deng
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk melakukan case folding, yaitu mengubah seluruh huruf kapital pada teks di kolom isi_berita menjadi huruf kecil (lowercase). Langkah ini dilakukan agar sistem memperlakukan kata yang sama sebagai satu entitas unik tanpa terpengaruh oleh perbedaan penggunaan huruf besar atau kecil (misalnya, kata “Sepakbola”, “SEPAKBOLA”, dan “sepakbola” dianggap identik). Kode tersebut kemudian menampilkan perbandingan 500 karakter pertama dari teks berita sebelum dan sesudah proses case folding untuk memastikan bahwa seluruh karakter huruf telah berhasil diseragamkan.</p>
+</section>
+<section id="menghapus-tanda-baca">
+<h2>Menghapus tanda baca<a class="headerlink" href="#menghapus-tanda-baca" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">hapus_tanda_baca</span><span class="p">(</span><span class="n">teks</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">teks</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">))</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">"tanpa_tanda_baca"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"case_folding"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hapus_tanda_baca</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sebelum tanda baca dihapus:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"case_folding"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Setelah tanda baca dihapus:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tanpa_tanda_baca"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sebelum tanda baca dihapus:
+kejuaraan nasional gokart 2026 yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir. romy tahrizi berhasil menjadi juara nasional shifter 150 tahun 2026 bersama dewa united motorsport setelah melalui perjuangan sepanjang musim. kepastian tersebut diraih romy pada final race round 6 yang berlangsung pada 5-6 september 2026. sebelumnya, pembalap yang juga berprofesi sebagai lawyer di kantor ahhn lawyers tersebut masih menempati posisi kedua klasemen sementara deng
+
+Setelah tanda baca dihapus:
+kejuaraan nasional gokart 2026 yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir romy tahrizi berhasil menjadi juara nasional shifter 150 tahun 2026 bersama dewa united motorsport setelah melalui perjuangan sepanjang musim kepastian tersebut diraih romy pada final race round 6 yang berlangsung pada 56 september 2026 sebelumnya pembalap yang juga berprofesi sebagai lawyer di kantor ahhn lawyers tersebut masih menempati posisi kedua klasemen sementara dengan se
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghapus seluruh tanda baca (seperti titik, koma, tanda petik, dan simbol lainnya) dari teks berita. Langkah ini penting untuk menghilangkan karakter tak bermakna yang dapat mengganggu analisis teks dan memperbanyak variasi kata secara tak perlu. Dengan fungsi hapus_tanda_baca() yang memanfaatkan string.punctuation, teks hasil case folding dibersihkan sehingga hanya menyisakan kata dan angka, lalu kode menampilkan perbandingan 500 karakter pertama sebelum dan sesudah proses pembersihan untuk memastikan tanda baca telah berhasil dihilangkan.</p>
+</section>
+<section id="menghapus-angka">
+<h2>Menghapus angka<a class="headerlink" href="#menghapus-angka" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">hapus_angka</span><span class="p">(</span><span class="n">teks</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\d+"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">teks</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">"tanpa_angka"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tanpa_tanda_baca"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hapus_angka</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sebelum angka dihapus:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tanpa_tanda_baca"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Setelah angka dihapus:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tanpa_angka"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sebelum angka dihapus:
+kejuaraan nasional gokart 2026 yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir romy tahrizi berhasil menjadi juara nasional shifter 150 tahun 2026 bersama dewa united motorsport setelah melalui perjuangan sepanjang musim kepastian tersebut diraih romy pada final race round 6 yang berlangsung pada 56 september 2026 sebelumnya pembalap yang juga berprofesi sebagai lawyer di kantor ahhn lawyers tersebut masih menempati posisi kedua klasemen sementara dengan se
+
+Setelah angka dihapus:
+kejuaraan nasional gokart  yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir romy tahrizi berhasil menjadi juara nasional shifter  tahun  bersama dewa united motorsport setelah melalui perjuangan sepanjang musim kepastian tersebut diraih romy pada final race round  yang berlangsung pada  september  sebelumnya pembalap yang juga berprofesi sebagai lawyer di kantor ahhn lawyers tersebut masih menempati posisi kedua klasemen sementara dengan selisih  poin dari p
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghapus seluruh karakter angka dari teks berita menggunakan ekspresi reguler (regular expression r”\d+”). Langkah ini dilakukan karena dalam tugas klasifikasi topik berita umum, karakter angka (seperti tanggal, jumlah, atau nomor) biasanya bersifat sangat spesifik dan tidak memberikan makna kontekstual yang signifikan untuk membedakan kategori berita. Dengan menggunakan fungsi hapus_angka(), teks hasil pembersihan tanda baca diproses sehingga hanya menyisakan kata-kata, lalu kode menampilkan perbandingan 500 karakter pertama sebelum dan sesudah pembersihan untuk memastikan seluruh angka telah berhasil dihilangkan.</p>
+</section>
+<section id="membersihkan-spasi">
+<h2>Membersihkan spasi<a class="headerlink" href="#membersihkan-spasi" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">bersihkan_spasi</span><span class="p">(</span><span class="n">teks</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">teks</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tanpa_angka"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">bersihkan_spasi</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>kejuaraan nasional gokart yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir romy tahrizi berhasil menjadi juara nasional shifter tahun bersama dewa united motorsport setelah melalui perjuangan sepanjang musim kepastian tersebut diraih romy pada final race round yang berlangsung pada september sebelumnya pembalap yang juga berprofesi sebagai lawyer di kantor ahhn lawyers tersebut masih menempati posisi kedua klasemen sementara dengan selisih poin dari pemuncak
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk merapikan dan membersihkan spasi yang tidak teratur pada teks berita menggunakan ekspresi reguler (r”\s+”) dan metode .strip(). Langkah ini penting dilakukan setelah proses penghapusan tanda baca dan angka, yang biasanya meninggalkan spasi ganda, spasi berlebih antar kata, atau spasi liar di awal dan akhir kalimat. Dengan fungsi bersihkan_spasi(), teks dipastikan menjadi rapi dengan hanya satu spasi standar sebagai pemisah antar kata, lalu kode menampilkan 500 karakter pertama dari kolom clean_text untuk mengonfirmasi bahwa struktur teks sudah bersih dan siap dilanjutkan ke tahap pemrosesan berikutnya.</p>
+</section>
+<section id="melakukan-tokenisasi">
+<h2>Melakukan Tokenisasi<a class="headerlink" href="#melakukan-tokenisasi" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Teks:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">300</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Token:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">30</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Jumlah token:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Teks:
+kejuaraan nasional gokart yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir romy tahrizi berhasil menjadi juara nasional shifter tahun bersama dewa united motorsport setelah melalui perjuangan sepanjang musim kepastian tersebut diraih romy pada final race round y
+
+Token:
+['kejuaraan', 'nasional', 'gokart', 'yang', 'berlangsung', 'dalam', 'enam', 'putaran', 'menghadirkan', 'persaingan', 'ketat', 'hingga', 'seri', 'terakhir', 'romy', 'tahrizi', 'berhasil', 'menjadi', 'juara', 'nasional', 'shifter', 'tahun', 'bersama', 'dewa', 'united', 'motorsport', 'setelah', 'melalui', 'perjuangan', 'sepanjang']
+
+Jumlah token:
+614
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk melakukan tokenisasi, yaitu memecah string teks berita yang sudah bersih menjadi daftar kata-kata individual (list of tokens) menggunakan fungsi .split(). Langkah ini merupakan pemisahan mendasar dalam Natural Language Processing (NLP) agar setiap kata dapat diakses dan diproses secara terpisah pada tahap-tahap berikutnya, seperti stopword removal, stemming, dan embedding. Kode tersebut kemudian menampilkan perbandingan antara 300 karakter pertama teks utuh, 30 kata/token pertama hasil pemotongan, serta total jumlah token dalam dokumen tersebut untuk memastikan proses pemisahan kata berjalan dengan benar.</p>
+</section>
+<section id="melakukan-stopword">
+<h2>Melakukan Stopword<a class="headerlink" href="#melakukan-stopword" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factory_stopword</span> <span class="o">=</span> <span class="n">StopWordRemoverFactory</span><span class="p">()</span>
+<span class="n">stopwords</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">factory_stopword</span><span class="o">.</span><span class="n">get_stop_words</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah stopword:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">stopwords</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Contoh stopword:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">stopwords</span><span class="p">)[:</span><span class="mi">30</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah stopword: 123
+
+Contoh stopword:
+['sementara', 'jika', 'seterusnya', 'seraya', 'terhadap', 'tidak', 'yaitu', 'oh', 'ok', 'daripada', 'oleh', 'harus', 'sekitar', 'untuk', 'pula', 'kah', 'apalagi', 'secara', 'agar', 'yakni', 'hal', 'sesuatu', 'serta', 'dan', 'itulah', 'kembali', 'sebelum', 'dapat', 'melainkan', 'setiap']
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menyiapkan dan menampilkan daftar kata umum (stopwords) dalam bahasa Indonesia menggunakan library Sastrawi melalui kelas StopWordRemoverFactory. Stopwords adalah kata hubung atau kata tugas yang sering muncul tetapi tidak memiliki makna penting untuk menentukan topik berita (seperti “yang”, “di”, “ke”, “dari”, atau “dan”). Langkah ini dilakukan sebagai persiapan sebelum kata-kata tersebut dibuang dari dataset, sehingga model dapat berfokus hanya pada kata-kata bernilai informasi tinggi. Kode tersebut kemudian mencetak total jumlah stopword yang berhasil dimuat serta menampilkan 30 contoh katanya untuk memastikan daftar sudah siap digunakan.</p>
+</section>
+<section id="menghapus-stopword">
+<h2>Menghapus Stopword<a class="headerlink" href="#menghapus-stopword" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">hapus_stopword</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">kata</span> <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="n">kata</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords</span><span class="p">]</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stopword"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hapus_stopword</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sebelum dilakukan stopword:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">40</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Setelah dilakukan stopword:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stopword"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">40</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sebelum dilakukan stopword:
+['kejuaraan', 'nasional', 'gokart', 'yang', 'berlangsung', 'dalam', 'enam', 'putaran', 'menghadirkan', 'persaingan', 'ketat', 'hingga', 'seri', 'terakhir', 'romy', 'tahrizi', 'berhasil', 'menjadi', 'juara', 'nasional', 'shifter', 'tahun', 'bersama', 'dewa', 'united', 'motorsport', 'setelah', 'melalui', 'perjuangan', 'sepanjang', 'musim', 'kepastian', 'tersebut', 'diraih', 'romy', 'pada', 'final', 'race', 'round', 'yang']
+
+Setelah dilakukan stopword:
+['kejuaraan', 'nasional', 'gokart', 'berlangsung', 'enam', 'putaran', 'menghadirkan', 'persaingan', 'ketat', 'hingga', 'seri', 'terakhir', 'romy', 'tahrizi', 'berhasil', 'menjadi', 'juara', 'nasional', 'shifter', 'tahun', 'bersama', 'dewa', 'united', 'motorsport', 'melalui', 'perjuangan', 'sepanjang', 'musim', 'kepastian', 'tersebut', 'diraih', 'romy', 'final', 'race', 'round', 'berlangsung', 'september', 'sebelumnya', 'pembalap', 'berprofesi']
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghapus kata-kata umum (stopwords) dari daftar token berita menggunakan fungsi hapus_stopword(). Fungsi ini menyaring setiap kata dalam daftar token dan hanya menyimpam kata yang tidak terdaftar di dalam koleksi stopwords Sastrawi. Langkah ini sangat penting untuk mengurangi kebiasaan (noise) data dan memperkecil ukuran vocabulary, sehingga model hanya berfokus pada kata-kata yang memiliki bobot informasi penting untuk membedakan kategori berita. Kode tersebut kemudian menampilkan perbandingan 40 token pertama sebelum dan sesudah penyaringan untuk memastikan bahwa kata-kata seperti kata hubung atau kata depan telah berhasil dibuang.</p>
+</section>
+<section id="melakukan-stemmer">
+<h2>Melakukan Stemmer<a class="headerlink" href="#melakukan-stemmer" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factory_stemmer</span> <span class="o">=</span> <span class="n">StemmerFactory</span><span class="p">()</span>
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">factory_stemmer</span><span class="o">.</span><span class="n">create_stemmer</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Stemmer berhasil dibuat."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stemmer berhasil dibuat.
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk inisialisasi dan pembuatan objek stemmer bahasa Indonesia menggunakan library Sastrawi melalui kelas StemmerFactory. Pembuatan objek ini dilakukan di awal agar siap digunakan pada proses stemming (mengubah kata berimbuhan menjadi kata dasar). Pemisahan langkah ini dari fungsi pemrosesan utama bertujuan untuk efisiensi eksekusi program, kemudian perintah print digunakan untuk mengonfirmasi bahwa pustaka Sastrawi telah berhasil mengunduh seluruh aturan tata bahasa dan siap melakukan proses stemming.</p>
+</section>
+<section id="melakukan-stemming">
+<h2>Melakukan Stemming<a class="headerlink" href="#melakukan-stemming" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">stemming</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">kata</span><span class="p">)</span> <span class="k">for</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stemmed"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stopword"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">stemming</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sebelum dilakukan stemming:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stopword"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">40</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Setelah dilakukan stemming:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stemmed"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">40</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sebelum dilakukan stemming:
+['kejuaraan', 'nasional', 'gokart', 'berlangsung', 'enam', 'putaran', 'menghadirkan', 'persaingan', 'ketat', 'hingga', 'seri', 'terakhir', 'romy', 'tahrizi', 'berhasil', 'menjadi', 'juara', 'nasional', 'shifter', 'tahun', 'bersama', 'dewa', 'united', 'motorsport', 'melalui', 'perjuangan', 'sepanjang', 'musim', 'kepastian', 'tersebut', 'diraih', 'romy', 'final', 'race', 'round', 'berlangsung', 'september', 'sebelumnya', 'pembalap', 'berprofesi']
+
+Setelah dilakukan stemming:
+['juara', 'nasional', 'gokart', 'langsung', 'enam', 'putar', 'hadir', 'saing', 'ketat', 'hingga', 'seri', 'akhir', 'romy', 'tahrizi', 'hasil', 'jadi', 'juara', 'nasional', 'shifter', 'tahun', 'sama', 'dewa', 'united', 'motorsport', 'lalu', 'juang', 'panjang', 'musim', 'pasti', 'sebut', 'raih', 'romy', 'final', 'race', 'round', 'langsung', 'september', 'belum', 'balap', 'profesi']
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk melakukan stemming, yaitu mengubah setiap kata berimbuhan dalam daftar token menjadi kata dasarnya (misalnya, kata “memenangi” menjadi “menang” atau “berita” tetap “berita”) menggunakan objek stemmer dari Sastrawi. Langkah ini penting untuk menyeragamkan variasi kata yang memiliki makna dasar sama agar model tidak menganggapnya sebagai kata yang berbeda, sehingga ukuran vocabulary menjadi lebih efisien. Kode tersebut kemudian menampilkan perbandingan 40 token pertama sebelum dan sesudah proses stemming untuk memastikan seluruh imbuhan (awalan, sisipan, akhiran) pada kata telah berhasil dihilangkan.</p>
+</section>
+<section id="menghitung-jumlah-kata-unik-sebelum-dilakukan-preprocessing">
+<h2>Menghitung jumlah kata unik sebelum dilakukan preprocessing<a class="headerlink" href="#menghitung-jumlah-kata-unik-sebelum-dilakukan-preprocessing" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kata_sebelum</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]:</span>
+    <span class="n">kata_sebelum</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+
+<span class="n">unik_sebelum</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">kata_sebelum</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Total kata:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kata_sebelum</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah kata unik:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">unik_sebelum</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total kata: 56820
+Jumlah kata unik: 7205
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghitung total kata dan jumlah kata unik (vocabulary size) sebelum dilakukan pemrosesan teks (preprocessing seperti stopword removal dan stemming). Kode ini mengumpulkan seluruh token dari kolom tokens ke dalam satu daftar tunggal kata_sebelum, lalu menggunakan fungsi set() untuk menyaring kata-kata yang sama sehingga diperoleh daftar kata yang unik. Informasi ini penting sebagai data acuan (baseline) awal untuk mengukur sejauh mana proses preprocessing nantinya berhasil mereduksi jumlah kata berulang dan efisiensi ukuran vocabulary.</p>
+</section>
+<section id="menghitung-jumlah-kata-unik-setelah-dilakukan-preprocessing">
+<h2>Menghitung jumlah kata unik setelah dilakukan preprocessing<a class="headerlink" href="#menghitung-jumlah-kata-unik-setelah-dilakukan-preprocessing" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kata_sesudah</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stemmed"</span><span class="p">]:</span>
+    <span class="n">kata_sesudah</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+
+<span class="n">unik_sesudah</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">kata_sesudah</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Total kata:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kata_sesudah</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah kata unik:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">unik_sesudah</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Pengurangan kata unik:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unik_sebelum</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">unik_sesudah</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total kata: 43570
+Jumlah kata unik: 5257
+
+Pengurangan kata unik:
+1948
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghitung total kata dan jumlah kata unik (vocabulary size) setelah seluruh tahap preprocessing (case folding, pembersihan teks, stopword removal, dan stemming) selesai dilakukan. Kode ini mengumpulkan seluruh token dari kolom tokens_stemmed ke dalam satu daftar kata_sesudah, lalu menyaring kata uniknya menggunakan fungsi set(). Terakhir, kode menghitung selisih antara unik_sebelum dan unik_sesudah untuk mengevaluasi seberapa banyak variasi kata terbuang/terreduksi, yang membuktikan efisiensi pembersihan data dalam mengecilkan ukuran vocabulary sebelum dimasukkan ke model Word2Vec.</p>
+</section>
+<section id="melihat-hasil-preprocessing">
+<h2>Melihat hasil preprocessing<a class="headerlink" href="#melihat-hasil-preprocessing" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[[</span>
+    <span class="s2">"isi_berita"</span><span class="p">,</span>
+    <span class="s2">"case_folding"</span><span class="p">,</span>
+    <span class="s2">"tanpa_tanda_baca"</span><span class="p">,</span>
+    <span class="s2">"tanpa_angka"</span><span class="p">,</span>
+    <span class="s2">"tokens_stopword"</span><span class="p">,</span>
+    <span class="s2">"tokens_stemmed"</span><span class="p">,</span>
+    <span class="s2">"label"</span>
+<span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-b4bb8e1e-35a6-4588-b48f-77002eb2ec97" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>isi_berita</th>
+      <th>case_folding</th>
+      <th>tanpa_tanda_baca</th>
+      <th>tanpa_angka</th>
+      <th>tokens_stopword</th>
+      <th>tokens_stemmed</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Kejuaraan Nasional Gokart 2026 yang berlangsun...</td>
+      <td>kejuaraan nasional gokart 2026 yang berlangsun...</td>
+      <td>kejuaraan nasional gokart 2026 yang berlangsun...</td>
+      <td>kejuaraan nasional gokart  yang berlangsung da...</td>
+      <td>[kejuaraan, nasional, gokart, berlangsung, ena...</td>
+      <td>[juara, nasional, gokart, langsung, enam, puta...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>PT Bank Negara Indonesia (Persero) Tbk atau BN...</td>
+      <td>pt bank negara indonesia (persero) tbk atau bn...</td>
+      <td>pt bank negara indonesia persero tbk atau bni ...</td>
+      <td>pt bank negara indonesia persero tbk atau bni ...</td>
+      <td>[pt, bank, negara, indonesia, persero, tbk, bn...</td>
+      <td>[pt, bank, negara, indonesia, persero, tbk, bn...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Pelatih Timnas voli putra Indonesia, Reidel To...</td>
+      <td>pelatih timnas voli putra indonesia, reidel to...</td>
+      <td>pelatih timnas voli putra indonesia reidel toi...</td>
+      <td>pelatih timnas voli putra indonesia reidel toi...</td>
+      <td>[pelatih, timnas, voli, putra, indonesia, reid...</td>
+      <td>[latih, timnas, voli, putra, indonesia, reidel...</td>
+      <td>sport</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-b4bb8e1e-35a6-4588-b48f-77002eb2ec97')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-b4bb8e1e-35a6-4588-b48f-77002eb2ec97 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-b4bb8e1e-35a6-4588-b48f-77002eb2ec97');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+<p>kode tersebut bertujuan untuk menampilkan ringkasan dan perbandingan perubahan data pada 3 baris pertama (top 3 rows) di setiap tahapan preprocessing. Dengan menyandingkan kolom dari teks asli (isi_berita), hasil case folding, pembersihan tanda baca, pembersihan angka, hasil stopword removal, hasil stemming, hingga label kategorinya dalam satu tabel DataFrame, kode ini berfungsi untuk melakukan verifikasi visual (pemeriksaan kualitas data) guna memastikan bahwa seluruh alur transformasi teks telah berjalan secara runut dan benar sebelum melangkah ke tahap ekstraksi fitur Word2Vec.</p>
+</section>
+<section id="membuat-corpus-untuk-word2vec">
+<h2>Membuat corpus untuk Word2Vec<a class="headerlink" href="#membuat-corpus-untuk-word2vec" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corpus</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stemmed"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah dokumen:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Dokumen pertama:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">corpus</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">50</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah dokumen: 200
+
+Dokumen pertama:
+['juara', 'nasional', 'gokart', 'langsung', 'enam', 'putar', 'hadir', 'saing', 'ketat', 'hingga', 'seri', 'akhir', 'romy', 'tahrizi', 'hasil', 'jadi', 'juara', 'nasional', 'shifter', 'tahun', 'sama', 'dewa', 'united', 'motorsport', 'lalu', 'juang', 'panjang', 'musim', 'pasti', 'sebut', 'raih', 'romy', 'final', 'race', 'round', 'langsung', 'september', 'belum', 'balap', 'profesi', 'lawyer', 'kantor', 'ahhn', 'lawyers', 'sebut', 'tempat', 'posisi', 'dua', 'klasemen', 'selisih']
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk membentuk corpus, yaitu mengubah kumpulan token hasil stemming pada kolom tokens_stemmed dari bentuk pandas Series menjadi struktur data list standar Python (tolist()). Struktur data berbentuk list of lists (daftar kalimat di mana tiap kalimat berisi daftar kata) ini merupakan format input wajib yang dibutuhkan oleh library Gensim untuk melatih model Word2Vec. Kode tersebut kemudian mencetak total jumlah dokumen (200 artikel) dan menampilkan 50 kata pertama dari dokumen pertama untuk memastikan bahwa corpus telah siap dimasukkan ke dalam pemodelan word embedding.</p>
+</section>
+<section id="word2vec-skip-gram">
+<h2>Word2Vec Skip-Gram<a class="headerlink" href="#word2vec-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vector_size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">window</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">min_count</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">model_w2v</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span>
+    <span class="n">sentences</span><span class="o">=</span><span class="n">corpus</span><span class="p">,</span>
+    <span class="n">vector_size</span><span class="o">=</span><span class="n">vector_size</span><span class="p">,</span>
+    <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">,</span>
+    <span class="n">min_count</span><span class="o">=</span><span class="n">min_count</span><span class="p">,</span>
+    <span class="n">sg</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>          <span class="c1"># 1 = Skip-Gram</span>
+    <span class="n">workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Word2Vec Skip-Gram berhasil dibuat."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Vector size :"</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Window      :"</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Min count   :"</span><span class="p">,</span> <span class="n">min_count</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Epoch       :"</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Vocabulary  :"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_w2v</span><span class="o">.</span><span class="n">wv</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Word2Vec Skip-Gram berhasil dibuat.
+Vector size : 100
+Window      : 5
+Min count   : 1
+Epoch       : 20
+Vocabulary  : 5257
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk membangun dan melatih model word embedding Word2Vec menggunakan arsitektur Skip-Gram (sg=1) berbasis corpus yang telah dibersihkan. Parameter vector_size=100 menentukan bahwa setiap kata dipetakan menjadi vektor berdimensi 100, window=5 menentukan jangkauan kata konteks di sekitar kata target, min_count=1 memastikan seluruh kata unik masuk ke dalam vocabulary, dan epochs=20 mengatur jumlah iterasi pelatihan. Langkah ini krusial untuk mengonversi kata-kata teks menjadi representasi vektor numerik berdimensi kontinu yang mampu menangkap hubungan makna dan konteks semantik antar-kata, sebelum akhirnya kode mencetak ringkasan konfigurasi model beserta jumlah vocabulary yang berhasil dipelajari.</p>
+</section>
+<section id="melihat-vector-sebuah-kata">
+<h2>Melihat vector sebuah kata<a class="headerlink" href="#melihat-vector-sebuah-kata" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kata</span> <span class="o">=</span> <span class="s2">"motogp"</span>
+
+<span class="k">if</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">model_w2v</span><span class="o">.</span><span class="n">wv</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Vector untuk kata:"</span><span class="p">,</span> <span class="n">kata</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">model_w2v</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="n">kata</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Panjang vector:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_w2v</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="n">kata</span><span class="p">]))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Kata tidak ditemukan."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Vector untuk kata: motogp
+[ 0.14542289 -0.0763043  -0.07525325  0.1836487  -0.07204488 -0.8098037
+  0.4136779  -0.35117003 -0.30488342  0.12403167 -0.34514457  0.12099214
+  0.7594229   0.3391698  -0.2645965  -0.26865497  0.33087042 -0.61510533
+ -0.2168024   0.4011903   0.09869518  0.04118117  0.26700452  0.67569
+ -0.03394868  0.19143434 -0.30023763  0.27899572 -0.60583186  0.3340186
+ -0.43533012  0.41575763  0.09692323 -0.3974033   0.6915965   0.56397355
+ -0.03859675 -0.5688437   0.39161205  0.13474995 -0.0310381  -0.04235988
+  0.5090746  -0.34898254  0.49699536  0.03658485  0.5201839  -0.03108499
+  0.24071556 -0.23218507 -0.02374775 -0.6175294   0.5343739  -0.0543852
+  0.22230253 -0.77792656  0.32458457  0.5719531  -0.9776999   0.41609877
+ -0.1809076  -0.04684957  0.02958082 -0.44859278  0.725699   -0.42974094
+  0.46764916 -0.24783298 -0.04301067  1.1938409  -0.20256954 -0.50773966
+  0.21653865 -0.3904898   0.3874868  -0.47726765 -0.15768987 -0.12864636
+ -0.19683261  0.15321742 -0.05484948 -0.56188    -0.3835856   0.5668851
+ -0.28327176 -0.15711714 -0.24049687 -0.01150995  0.4696764  -0.5388674
+ -0.58568186  0.08871809  0.78485364 -0.31558928  0.13305114 -0.685331
+  0.5880444   0.53275156  0.07316776 -0.22469133]
+
+Panjang vector: 100
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk memeriksa dan menampilkan bentuk vektor numerik dari suatu kata tertentu (dalam hal ini kata “motogp”) yang telah dipelajari oleh model Word2Vec Skip-Gram. Melalui pengkondisian if kata in model_w2v.wv, kode ini terlebih dahulu memastikan apakah kata tersebut masuk ke dalam vocabulary model. Jika ditemukan, kode akan mencetak deretan angka vektor kontinu berukuran 100 dimensi yang mewakili makna kata tersebut, serta mengonfirmasi panjang dimensi vektornya. Langkah ini berguna sebagai verifikasi untuk melihat secara langsung bagaimana suatu kata berhasil dikonversi dari bentuk teks menjadi representasi vektor numerik.</p>
+</section>
+<section id="melihat-kata-yang-mirip">
+<h2>Melihat kata yang mirip<a class="headerlink" href="#melihat-kata-yang-mirip" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kata</span> <span class="o">=</span> <span class="s2">"balap"</span>
+
+<span class="k">if</span> <span class="n">kata</span> <span class="ow">in</span> <span class="n">model_w2v</span><span class="o">.</span><span class="n">wv</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Kata yang paling mirip dengan:"</span><span class="p">,</span> <span class="n">kata</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">model_w2v</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">kata</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Kata tidak ditemukan."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Kata yang paling mirip dengan: balap
+[('kandang', 0.7745506763458252), ('prix', 0.7704567313194275), ('italia', 0.7680105566978455), ('dalligna', 0.760250985622406), ('sprint', 0.7594074010848999), ('tang', 0.7576108574867249), ('buruk', 0.7564852833747864), ('tunggang', 0.7484589219093323), ('motosan', 0.7445095181465149), ('sirkuit', 0.7433331608772278)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk mengevaluasi dan menguji kualitas relasi semantik (makna kata) pada model Word2Vec Skip-Gram dengan mencari kata-kata yang paling mirip dengan kata “balap”.</p>
+<p>Melalui metode most_similar(kata, topn=10), model menghitung tingkat kemiripan vektor (cosine similarity) antar-kata yang ada dalam vocabulary. Hasilnya akan menampilkan 10 kata teratas yang sering muncul dalam konteks serupa dengan kata “balap” (seperti “sirkuit”, “sprint”, atau “prix”) beserta nilai skor kemiripannya. Langkah ini penting untuk membuktikan bahwa model Word2Vec telah berhasil memahami konteks dan hubungan makna kata dalam domain berita secara logis.</p>
+</section>
+<section id="mengubah-setiap-berita-menjadi-vector">
+<h2>Mengubah setiap berita menjadi vector<a class="headerlink" href="#mengubah-setiap-berita-menjadi-vector" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">document_vector</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">:</span>
+            <span class="n">vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="n">word</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">vector_size</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="n">document_vector</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">model_w2v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"tokens_stemmed"</span><span class="p">]</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Shape X:"</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shape X: (200, 100)
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk mengubah setiap artikel berita (dokumen) menjadi satu vektor representasi tunggal menggunakan metode rata-rata vektor kata (Average Word Vector).   Melalui fungsi document_vector(), sistem mengekstraksi vektor dari setiap kata dalam artikel yang ada di vocabulary Word2Vec, lalu menghitung reratanya (np.mean) sehingga menghasilkan satu vektor berdimensi 100 untuk mewakili keseluruhan isi berita. Proses ini diterapkan pada seluruh dokumen di kolom tokens_stemmed untuk membentang matriks fitur <span class="math notranslate nohighlight">\(X\)</span> berukuran (200, 100). Langkah ini sangat krusial karena mengonversi data teks menjadi matriks numerik yang siap digunakan sebagai input pada algoritma pembelajaran mesin (Gaussian Naive Bayes).</p>
+</section>
+<section id="melihat-bentuk-vector-dokumen">
+<h2>Melihat bentuk vector dokumen<a class="headerlink" href="#melihat-bentuk-vector-dokumen" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Vector dokumen pertama:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Jumlah fitur:"</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Vector dokumen pertama:
+[-0.02999367 -0.15503299 -0.1803959   0.10302281  0.06080508 -0.08216161
+ -0.00686909 -0.01206762 -0.07140671  0.01377277 -0.53750676 -0.00515466
+  0.04402555  0.26606742  0.07714206 -0.26540497 -0.04652653 -0.19614415
+ -0.06330512  0.01407722  0.10465902  0.3646378   0.14331949  0.45790875
+  0.2036137   0.24956144 -0.21757358  0.35880864 -0.14246142  0.06658688
+ -0.3769368   0.03304863 -0.01851524 -0.00878291  0.2571519  -0.11270835
+  0.07468006 -0.42097235  0.29397315  0.33219188  0.2605379  -0.0547271
+  0.28535977 -0.20838398  0.26781613  0.1693563   0.21144061  0.17786653
+  0.19048975 -0.18541467  0.04345917 -0.5252538  -0.06919884 -0.11093207
+ -0.2296547  -0.0987716  -0.03885553  0.14121403 -0.12225182  0.17469592
+ -0.1464881   0.22097556 -0.20159692  0.14842373  0.35954893 -0.15250675
+  0.19483146 -0.03796836 -0.06759886  0.16681053 -0.22788352 -0.0405478
+  0.0498393  -0.15042892  0.00394126 -0.20891295 -0.03611423 -0.12305012
+ -0.17214231 -0.06344903 -0.2835426  -0.36536935 -0.2768511   0.07111983
+ -0.21237099  0.12286508 -0.01832084 -0.1623824   0.0393797  -0.03675693
+ -0.16532592  0.36371332  0.03341909 -0.08430854  0.2582093  -0.01838111
+  0.32970753  0.10221225  0.0847252   0.08667854]
+
+Jumlah fitur: 100
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menampilkan dan memverifikasi representasi vektor dari dokumen/artikel berita pertama yang telah dihasilkan dari proses Average Word Vector.   Melalui X[0], kode mencetak deretan 100 nilai desimal kontinu yang mewakili karakteristik atau fitur dari artikel pertama secara keseluruhan. Selanjutnya, X.shape[1] digunakan untuk memastikan jumlah kolom/fitur pada matriks <span class="math notranslate nohighlight">\(X\)</span>, yaitu 100 fitur, sesuai dengan konfigurasi vector_size pada Word2Vec. Langkah ini berfungsi sebagai verifikasi akhir untuk memastikan bahwa data teks berita telah sukses ditransformasikan menjadi bentuk numerik berdimensi konstan yang siap diproses oleh model klasifikasi.</p>
+</section>
+<section id="membuat-target-label">
+<h2>Membuat target label<a class="headerlink" href="#membuat-target-label" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Label:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Contoh label:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Label:
+label
+sport      100
+finance    100
+Name: count, dtype: int64
+
+Contoh label:
+['sport', 'sport', 'sport', 'sport', 'sport', 'sport', 'sport', 'sport', 'sport', 'sport']
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menyiapkan dan memeriksa variabel target (label/kategori) yang akan diprediksi oleh model klasifikasi.Kode menyimpan kolom label ke dalam variabel <span class="math notranslate nohighlight">\(y\)</span>, lalu menggunakan y.value_counts() untuk menampilkan distribusi jumlah data pada masing-masing kategori (misalnya 100 berita “sport” dan 100 berita “finance”). Selanjutnya, y.head(10).tolist() mencetak 10 sampel label pertama untuk memastikan data target sudah berformat list yang bersih. Langkah ini penting dilakukan sebelum pembagian data (data splitting) guna memastikan bahwa kelas kategori seimbang (balanced dataset) dan siap dipasangkan dengan matriks fitur <span class="math notranslate nohighlight">\(X\)</span>.</p>
+</section>
+<section id="membagi-data-160-train-dan-40-test">
+<h2>Membagi data 160 train dan 40 test<a class="headerlink" href="#membagi-data-160-train-dan-40-test" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Data training :"</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Data testing  :"</span><span class="p">,</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Distribusi label training:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Distribusi label testing:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data training : (160, 100)
+Data testing  : (40, 100)
+
+Distribusi label training:
+label
+finance    80
+sport      80
+Name: count, dtype: int64
+
+Distribusi label testing:
+label
+finance    20
+sport      20
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk membagi dataset menjadi data latih (training set) dan data uji (testing set) menggunakan fungsi train_test_split dari scikit-learn.</p>
+<p>Parameter test_size=40 menentukan bahwa 40 sampel berita dialokasikan untuk pengujian, sementara sisanya (160 berita) digunakan untuk pelatihan model. Parameter stratify=y memastikan bahwa proporsi distribusi label pada data latih dan uji tetap seimbang persis dengan dataset asli (masing-masing kategori “sport” dan “finance” terbagi secara merata 50:50). Sementara itu, random_state=42 digunakan agar pembagian data bersifat konsisten (reproducible) setiap kali kode dijalankan. Akhirnya, kode mencetak dimensi matriks serta distribusi label untuk memastikan bahwa pembagian data latih dan data uji sudah seimbang dan siap masuk ke tahap pemodelan.</p>
+</section>
+<section id="membuat-model-gaussian-naive-bayes">
+<h2>Membuat model Gaussian Naive Bayes<a class="headerlink" href="#membuat-model-gaussian-naive-bayes" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nb_model</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+
+<span class="n">nb_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model Gaussian Naive Bayes berhasil dilatih."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model Gaussian Naive Bayes berhasil dilatih.
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk inisialisasi dan pelatihan model pemelajaran mesin Gaussian Naive Bayes menggunakan data latih.</p>
+<p>Kode membuat objek klasifikasi GaussianNB(), lalu memanggil metode .fit(X_train, y_train) untuk melatih model. Pada tahap ini, algoritma memperhitungkan asumsi bahwa fitur-fitur vektor kontinu dari Word2Vec berdistribusi normal (Gaussian) untuk mempelajari pola probabilitas dari masing-masing kategori berita (“sport” dan “finance”) berdasarkan matriks fitur data latih. Terakhir, pesan konfirmasi dicetak untuk memastikan proses pelatihan (training) telah selesai dan model siap digunakan untuk memprediksi data uji.</p>
+</section>
+<section id="prediksi-data-testing">
+<h2>Prediksi data testing<a class="headerlink" href="#prediksi-data-testing" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">nb_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Hasil prediksi:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Label sebenarnya:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hasil prediksi:
+['finance' 'sport' 'sport' 'sport' 'finance' 'sport' 'finance' 'sport'
+ 'sport' 'finance' 'sport' 'sport' 'finance' 'sport' 'finance' 'finance'
+ 'sport' 'finance' 'finance' 'sport' 'finance' 'sport' 'sport' 'sport'
+ 'sport' 'sport' 'sport' 'finance' 'sport' 'finance' 'sport' 'finance'
+ 'finance' 'finance' 'finance' 'finance' 'finance' 'finance' 'sport'
+ 'finance']
+
+Label sebenarnya:
+['finance' 'sport' 'sport' 'sport' 'finance' 'sport' 'finance' 'sport'
+ 'sport' 'finance' 'sport' 'sport' 'finance' 'sport' 'finance' 'finance'
+ 'sport' 'finance' 'finance' 'sport' 'finance' 'sport' 'sport' 'sport'
+ 'sport' 'sport' 'sport' 'finance' 'sport' 'finance' 'sport' 'finance'
+ 'finance' 'finance' 'finance' 'finance' 'finance' 'finance' 'sport'
+ 'finance']
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk melakukan pengujian dan membandingkan hasil prediksi model terhadap data uji (testing set).</p>
+<p>Melalui panggilan nb_model.predict(X_test), model Gaussian Naive Bayes yang telah dilatih mengevaluasi 40 matriks fitur data uji dan menghasilkan array y_pred yang berisi kategori berita hasil prediksi (apakah “sport” atau “finance”). Kode kemudian mencetak array y_pred beserta label asli dari data uji (y_test.values) secara berdampingan. Langkah ini dilakukan untuk verifikasi awal secara kasatmata guna melihat seberapa akurat model dalam memprediksi kelas berita sebelum menghitung metrik evaluasi secara keseluruhan.</p>
+</section>
+<section id="tabel-hasil-prediksi">
+<h2>Tabel hasil prediksi<a class="headerlink" href="#tabel-hasil-prediksi" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hasil_prediksi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Aktual"</span><span class="p">:</span> <span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="s2">"Prediksi"</span><span class="p">:</span> <span class="n">y_pred</span>
+<span class="p">})</span>
+
+<span class="n">hasil_prediksi</span><span class="p">[</span><span class="s2">"Benar/Salah"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+    <span class="n">hasil_prediksi</span><span class="p">[</span><span class="s2">"Aktual"</span><span class="p">]</span> <span class="o">==</span> <span class="n">hasil_prediksi</span><span class="p">[</span><span class="s2">"Prediksi"</span><span class="p">],</span>
+    <span class="s2">"Benar"</span><span class="p">,</span>
+    <span class="s2">"Salah"</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">hasil_prediksi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-04929665-c037-426d-98f7-7cc7ca64ba5c" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Aktual</th>
+      <th>Prediksi</th>
+      <th>Benar/Salah</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>sport</td>
+      <td>sport</td>
+      <td>Benar</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>finance</td>
+      <td>finance</td>
+      <td>Benar</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-04929665-c037-426d-98f7-7cc7ca64ba5c')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-04929665-c037-426d-98f7-7cc7ca64ba5c button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-04929665-c037-426d-98f7-7cc7ca64ba5c');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+  <div id="id_08d9dd90-8795-4076-9375-1884cf281e65">
+    <style>
+      .colab-df-generate {
+        background-color: #E8F0FE;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        fill: #1967D2;
+        height: 32px;
+        padding: 0 0 0 0;
+        width: 32px;
+      }
+
+      .colab-df-generate:hover {
+        background-color: #E2EBFA;
+        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+        fill: #174EA6;
+      }
+
+      [theme=dark] .colab-df-generate {
+        background-color: #3B4455;
+        fill: #D2E3FC;
+      }
+
+      [theme=dark] .colab-df-generate:hover {
+        background-color: #434B5C;
+        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+        fill: #FFFFFF;
+      }
+    </style>
+    <button class="colab-df-generate" onclick="generateWithVariable('hasil_prediksi')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_08d9dd90-8795-4076-9375-1884cf281e65 button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('hasil_prediksi');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+</div></div>
+</div>
+<p>kode tersebut bertujuan untuk membuat tabel perbandingan evaluasi secara mendetail antara nilai aktual dan hasil prediksi pada data uji.</p>
+<p>Kode menyatukan label asli (y_test.values) dan label hasil prediksi (y_pred) ke dalam satu DataFrame pandas bernama hasil_prediksi. Menggunakan fungsi np.where, sistem menambahkan kolom penanda “Benar/Salah” yang secara otomatis mengevaluasi apakah prediksi model cocok dengan data sebenarnya. Fungsi display() kemudian menampilkan tabel tersebut secara interaktif di Jupyter Notebook untuk mempermudah analisis dan inspeksi visual terhadap performa prediksi model berita per masing-masing artikel data uji.</p>
+</section>
+<section id="accuracy">
+<h2>Accuracy<a class="headerlink" href="#accuracy" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Accuracy:"</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Accuracy (%):"</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">"%"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy: 1.0
+Accuracy (%): 100.0 %
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghitung dan menampilkan tingkat akurasi (accuracy) dari model Gaussian Naive Bayes dalam mengklasifikasikan data uji.</p>
+<p>Melalui fungsi accuracy_score(y_test, y_pred) dari library scikit-learn, sistem menghitung persentase rasio antara jumlah prediksi yang benar (baik untuk kelas “sport” maupun “finance”) terhadap total keseluruhan sampel data uji (40 artikel). Kode kemudian mencetak nilai akurasi tersebut dalam bentuk desimal serta format persentase (%). Langkah ini merupakan metrik evaluasi utama untuk mengukur sejauh mana efektivitas gabungan metode Word2Vec Skip-Gram dan Gaussian Naive Bayes dalam memprediksi kategori berita secara akurat.</p>
+</section>
+<section id="precision-recall-f1-score">
+<h2>Precision, Recall, F1-Score<a class="headerlink" href="#precision-recall-f1-score" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">precision</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">y_pred</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s2">"weighted"</span>
+<span class="p">)</span>
+
+<span class="n">recall</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">y_pred</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s2">"weighted"</span>
+<span class="p">)</span>
+
+<span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">y_pred</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s2">"weighted"</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Precision :"</span><span class="p">,</span> <span class="n">precision</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Recall    :"</span><span class="p">,</span> <span class="n">recall</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"F1-Score  :"</span><span class="p">,</span> <span class="n">f1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Precision : 1.0
+Recall    : 1.0
+F1-Score  : 1.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghitung dan menampilkan metrik evaluasi tingkat lanjut, yaitu Precision, Recall, dan F1-Score dari model Gaussian Naive Bayes.</p>
+<p>Menggunakan fungsi precision_score, recall_score, dan f1_score dengan parameter average=”weighted”, sistem mengukur performa model dengan memperhitungkan proporsi sampel dari masing-masing kelas:</p>
+<p>Precision mengukur seberapa tepat model dalam memprediksi suatu kategori berita (meminimalisir kesalahan false positive).</p>
+<p>Recall mengukur seberapa banyak artikel berita dari kategori tertentu yang berhasil ditemukan/ditebak oleh model (meminimalisir kesalahan false negative).</p>
+<p>F1-Score memberikan nilai keseimbangan (harmonic mean) antara Precision dan Recall.</p>
+</section>
+<section id="classification-report">
+<h2>Classification Report<a class="headerlink" href="#classification-report" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Classification Report:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">classification_report</span><span class="p">(</span>
+        <span class="n">y_test</span><span class="p">,</span>
+        <span class="n">y_pred</span><span class="p">,</span>
+        <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"finance"</span><span class="p">,</span> <span class="s2">"sport"</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Classification Report:
+              precision    recall  f1-score   support
+
+     finance       1.00      1.00      1.00        20
+       sport       1.00      1.00      1.00        20
+
+    accuracy                           1.00        40
+   macro avg       1.00      1.00      1.00        40
+weighted avg       1.00      1.00      1.00        40
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menampilkan laporan evaluasi performa model secara menyeluruh (classification report) untuk setiap kelas kategori berita.</p>
+<p>Menggunakan fungsi classification_report() dari scikit-learn, sistem menyajikan rekapitulasi nilai Precision, Recall, dan F1-Score secara terpisah untuk kategori “finance” dan “sport”, beserta nilai support (jumlah sampel data uji pada masing-masing kategori). Laporan ini juga menyertakan perhitungan Rata-Rata Makro (Macro Average) dan Rata-Rata Terbobot (Weighted Average) untuk keseluruhan model. Langkah ini sangat membantu untuk melihat secara detail apakah model bekerja seimbang pada kedua kelas berita atau hanya unggul di salah satu kelas saja.</p>
+</section>
+<section id="confusion-matrix">
+<h2>Confusion Matrix<a class="headerlink" href="#confusion-matrix" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">y_pred</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">"finance"</span><span class="p">,</span> <span class="s2">"sport"</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Confusion Matrix:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Confusion Matrix:
+[[20  0]
+ [ 0 20]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menghitung dan menampilkan Confusion Matrix, yaitu matriks evaluasi berukuran 2x2 yang memetakan performa prediksi model secara mendetail terhadap label aktual pada data uji.</p>
+<p>Menggunakan fungsi confusion_matrix() dari scikit-learn dengan spesifikasi labels=[“finance”, “sport”], sistem membandingkan jumlah prediksi yang benar dan salah berdasarkan urutan kategori tersebut:</p>
+<p>True Negative (TN): Jumlah berita finance yang berhasil diprediksi dengan benar sebagai finance (baris 1, kolom 1).</p>
+<p>False Positive (FP): Jumlah berita finance yang salah diprediksi sebagai sport (baris 1, kolom 2).</p>
+<p>False Negative (FN): Jumlah berita sport yang salah diprediksi sebagai finance (baris 2, kolom 1).</p>
+<p>True Positive (TP): Jumlah berita sport yang berhasil diprediksi dengan benar sebagai sport (baris 2, kolom 2).</p>
+<p>Langkah ini penting untuk melihat secara kasatmata pola kesalahan (misclassification) yang terjadi pada model, sehingga Anda dapat mengetahui kategori mana yang paling sering tertukar oleh algoritma Gaussian Naive Bayes.</p>
+</section>
+<section id="visualisasi-confusion-matrix">
+<h2>Visualisasi Confusion Matrix<a class="headerlink" href="#visualisasi-confusion-matrix" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+    <span class="n">cm</span><span class="p">,</span>
+    <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="o">=</span><span class="s2">"d"</span><span class="p">,</span>
+    <span class="n">xticklabels</span><span class="o">=</span><span class="p">[</span><span class="s2">"finance"</span><span class="p">,</span> <span class="s2">"sport"</span><span class="p">],</span>
+    <span class="n">yticklabels</span><span class="o">=</span><span class="p">[</span><span class="s2">"finance"</span><span class="p">,</span> <span class="s2">"sport"</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Predicted Label"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"True Label"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Confusion Matrix - Gaussian Naive Bayes"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f5c62f6dde80c56c503e1a37982587d43e4d6ddeb4f4686e9ed3af7c399e4d53.png" src="_images/f5c62f6dde80c56c503e1a37982587d43e4d6ddeb4f4686e9ed3af7c399e4d53.png" />
+</div>
+</div>
+<p>kode tersebut bertujuan untuk menampilkan visualisasi Confusion Matrix dalam bentuk diagram peta panas (heatmap) menggunakan library Seaborn dan Matplotlib. Dengan fungsi sns.heatmap(), nilai-nilai numerik pada matriks cm dikonversi menjadi tampilan grafik berwarna lengkap dengan label sumbu (Predicted Label dan True Label) serta angka di setiap selnya (annot=True). Visualisasi ini berfungsi untuk mempermudah analisis intuitif secara visual, sehingga pembaca dapat langsung mengenali sebaran prediksi benar dan salah serta pola misklasifikasi antara kategori “finance” dan “sport” dengan cepat tanpa harus membaca angka mentah array.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hasil_evaluasi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Metrik"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"Accuracy"</span><span class="p">,</span>
+        <span class="s2">"Precision"</span><span class="p">,</span>
+        <span class="s2">"Recall"</span><span class="p">,</span>
+        <span class="s2">"F1-Score"</span>
+    <span class="p">],</span>
+    <span class="s2">"Nilai"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">accuracy</span><span class="p">,</span>
+        <span class="n">precision</span><span class="p">,</span>
+        <span class="n">recall</span><span class="p">,</span>
+        <span class="n">f1</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">hasil_evaluasi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-0b92e4a8-44b7-4b5e-919c-275d6547cf2d" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metrik</th>
+      <th>Nilai</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Accuracy</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Precision</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Recall</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>F1-Score</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-0b92e4a8-44b7-4b5e-919c-275d6547cf2d')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-0b92e4a8-44b7-4b5e-919c-275d6547cf2d button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-0b92e4a8-44b7-4b5e-919c-275d6547cf2d');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+  <div id="id_333cd282-1c72-4a1e-9db3-24344a6a498c">
+    <style>
+      .colab-df-generate {
+        background-color: #E8F0FE;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        fill: #1967D2;
+        height: 32px;
+        padding: 0 0 0 0;
+        width: 32px;
+      }
+
+      .colab-df-generate:hover {
+        background-color: #E2EBFA;
+        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+        fill: #174EA6;
+      }
+
+      [theme=dark] .colab-df-generate {
+        background-color: #3B4455;
+        fill: #D2E3FC;
+      }
+
+      [theme=dark] .colab-df-generate:hover {
+        background-color: #434B5C;
+        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+        fill: #FFFFFF;
+      }
+    </style>
+    <button class="colab-df-generate" onclick="generateWithVariable('hasil_evaluasi')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_333cd282-1c72-4a1e-9db3-24344a6a498c button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('hasil_evaluasi');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+</div></div>
+</div>
+<p>kode tersebut bertujuan untuk merangkum seluruh hasil metrik evaluasi utama model ke dalam satu tabel DataFrame yang rapi dan mudah dibaca.</p>
+<p>Dengan menyatukan nilai Accuracy, Precision, Recall, dan F1-Score ke dalam variabel hasil_evaluasi, kode ini menyajikan ringkasan performa akhir model Gaussian Naive Bayes secara terstruktur. Penggunaan fungsi display() mempermudah pembaca untuk melihat, membandingkan, dan mendokumentasikan performa keseluruhan model klasifikasi berita dalam satu tampilan tunggal tanpa harus memeriksa setiap output variabel secara terpisah.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hasil_preprocessing</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span>
+    <span class="s2">"id"</span><span class="p">,</span>
+    <span class="s2">"isi_berita"</span><span class="p">,</span>
+    <span class="s2">"label"</span><span class="p">,</span>
+    <span class="s2">"clean_text"</span><span class="p">,</span>
+    <span class="s2">"tokens_stopword"</span><span class="p">,</span>
+    <span class="s2">"tokens_stemmed"</span>
+<span class="p">]]</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">hasil_preprocessing</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-7da94841-f3d8-4783-857e-2c6e98b133a6" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>isi_berita</th>
+      <th>label</th>
+      <th>clean_text</th>
+      <th>tokens_stopword</th>
+      <th>tokens_stemmed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Kejuaraan Nasional Gokart 2026 yang berlangsun...</td>
+      <td>sport</td>
+      <td>kejuaraan nasional gokart yang berlangsung dal...</td>
+      <td>[kejuaraan, nasional, gokart, berlangsung, ena...</td>
+      <td>[juara, nasional, gokart, langsung, enam, puta...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>PT Bank Negara Indonesia (Persero) Tbk atau BN...</td>
+      <td>sport</td>
+      <td>pt bank negara indonesia persero tbk atau bni ...</td>
+      <td>[pt, bank, negara, indonesia, persero, tbk, bn...</td>
+      <td>[pt, bank, negara, indonesia, persero, tbk, bn...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Pelatih Timnas voli putra Indonesia, Reidel To...</td>
+      <td>sport</td>
+      <td>pelatih timnas voli putra indonesia reidel toi...</td>
+      <td>[pelatih, timnas, voli, putra, indonesia, reid...</td>
+      <td>[latih, timnas, voli, putra, indonesia, reidel...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Kontingen Indonesia bersiap menatap Asian Game...</td>
+      <td>sport</td>
+      <td>kontingen indonesia bersiap menatap asian game...</td>
+      <td>[kontingen, indonesia, bersiap, menatap, asian...</td>
+      <td>[kontingen, indonesia, siap, tatap, asi, games...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Rizki Juniansyah siap menjalani debut di Asian...</td>
+      <td>sport</td>
+      <td>rizki juniansyah siap menjalani debut di asian...</td>
+      <td>[rizki, juniansyah, siap, menjalani, debut, as...</td>
+      <td>[rizki, juniansyah, siap, jalan, debut, asi, g...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>Banjir besar melanda Nagoya, Jepang, menjelang...</td>
+      <td>sport</td>
+      <td>banjir besar melanda nagoya jepang menjelang a...</td>
+      <td>[banjir, besar, melanda, nagoya, jepang, menje...</td>
+      <td>[banjir, besar, landa, nagoya, jepang, jelang,...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>Ketua Umum Komite Olimpiade Indonesia (KOI) Ra...</td>
+      <td>sport</td>
+      <td>ketua umum komite olimpiade indonesia koi raja...</td>
+      <td>[ketua, umum, komite, olimpiade, indonesia, ko...</td>
+      <td>[ketua, umum, komite, olimpiade, indonesia, ko...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>Persaingan titel juara dunia semakin ketat men...</td>
+      <td>sport</td>
+      <td>persaingan titel juara dunia semakin ketat men...</td>
+      <td>[persaingan, titel, juara, dunia, semakin, ket...</td>
+      <td>[saing, titel, juara, dunia, makin, ketat, tuj...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>Pegokar muda Indonesia, Morgan Holindo, tak pu...</td>
+      <td>sport</td>
+      <td>pegokar muda indonesia morgan holindo tak puas...</td>
+      <td>[pegokar, muda, indonesia, morgan, holindo, ta...</td>
+      <td>[gokar, muda, indonesia, morgan, holindo, tak,...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>Pacuan kuda Indonesia mulai diarahkan menuju p...</td>
+      <td>sport</td>
+      <td>pacuan kuda indonesia mulai diarahkan menuju p...</td>
+      <td>[pacuan, kuda, indonesia, mulai, diarahkan, me...</td>
+      <td>[pacu, kuda, indonesia, mulai, arah, tuju, pan...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-7da94841-f3d8-4783-857e-2c6e98b133a6')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-7da94841-f3d8-4783-857e-2c6e98b133a6 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-7da94841-f3d8-4783-857e-2c6e98b133a6');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+<p>kode tersebut bertujuan untuk menyeleksi dan merangkum kolom-kolom utama hasil akhir pemrosesan teks (preprocessing) ke dalam satu DataFrame baru bernama hasil_preprocessing.</p>
+<p>Dengan mengambil variabel identifikasi (id), teks asli (isi_berita), kategori (label), teks hasil pembersihan awal (clean_text), token hasil penyaringan kata penting (tokens_stopword), dan token akhir hasil stemming (tokens_stemmed), kode ini menyajikan tampilan struktur data yang terorganisir. Penggunaan fungsi display(hasil_preprocessing.head(10)) menampilkan 10 sampel data pertama untuk verifikasi visual akhir, memastikan bahwa seluruh tahapan transformasi data siap disimpan atau didokumentasikan sebagai dataset bersih sebelum masuk ke tahap ekstrasi fitur dan pemodelan.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span> <span class="n">hasil_export</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span>
+     <span class="s2">"id"</span><span class="p">,</span>
+     <span class="s2">"isi_berita"</span><span class="p">,</span>
+     <span class="s2">"label"</span><span class="p">,</span>
+     <span class="s2">"case_folding"</span><span class="p">,</span>
+     <span class="s2">"tanpa_tanda_baca"</span><span class="p">,</span>
+     <span class="s2">"tanpa_angka"</span><span class="p">,</span>
+     <span class="s2">"clean_text"</span><span class="p">,</span>
+     <span class="s2">"tokens_stopword"</span><span class="p">,</span>
+     <span class="s2">"tokens_stemmed"</span>
+ <span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+ <span class="n">hasil_export</span><span class="p">[</span><span class="s2">"tokens_stopword"</span><span class="p">]</span> <span class="o">=</span> <span class="n">hasil_export</span><span class="p">[</span><span class="s2">"tokens_stopword"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+     <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+ <span class="p">)</span>
+
+ <span class="n">hasil_export</span><span class="p">[</span><span class="s2">"tokens_stemmed"</span><span class="p">]</span> <span class="o">=</span> <span class="n">hasil_export</span><span class="p">[</span><span class="s2">"tokens_stemmed"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+     <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+ <span class="p">)</span>
+
+ <span class="n">hasil_export</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span>
+     <span class="s2">"hasil_preprocessing.xlsx"</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+ <span class="p">)</span>
+
+ <span class="nb">print</span><span class="p">(</span><span class="s2">"File berhasil disimpan sebagai:"</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="s2">"hasil_preprocessing.xlsx"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File berhasil disimpan sebagai:
+hasil_preprocessing.xlsx
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Prepocessing_Tugas_2_PPW.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Praproses Teks, Representasi TF-IDF, dan Reduksi Dimensi PCA</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membaca-dataset-excel">Membaca dataset Excel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengecek-dataset">Mengecek dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-data-kosong">Menghapus data kosong</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-case-folding">Melakukan Case Folding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-tanda-baca">Menghapus tanda baca</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-angka">Menghapus angka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membersihkan-spasi">Membersihkan spasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-tokenisasi">Melakukan Tokenisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-stopword">Melakukan Stopword</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-stopword">Menghapus Stopword</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-stemmer">Melakukan Stemmer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melakukan-stemming">Melakukan Stemming</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-jumlah-kata-unik-sebelum-dilakukan-preprocessing">Menghitung jumlah kata unik sebelum dilakukan preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-jumlah-kata-unik-setelah-dilakukan-preprocessing">Menghitung jumlah kata unik setelah dilakukan preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-hasil-preprocessing">Melihat hasil preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-corpus-untuk-word2vec">Membuat corpus untuk Word2Vec</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word2vec-skip-gram">Word2Vec Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-vector-sebuah-kata">Melihat vector sebuah kata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-kata-yang-mirip">Melihat kata yang mirip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengubah-setiap-berita-menjadi-vector">Mengubah setiap berita menjadi vector</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-bentuk-vector-dokumen">Melihat bentuk vector dokumen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-target-label">Membuat target label</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membagi-data-160-train-dan-40-test">Membagi data 160 train dan 40 test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-model-gaussian-naive-bayes">Membuat model Gaussian Naive Bayes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-data-testing">Prediksi data testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-hasil-prediksi">Tabel hasil prediksi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy">Accuracy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-recall-f1-score">Precision, Recall, F1-Score</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-report">Classification Report</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-matrix">Confusion Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-confusion-matrix">Visualisasi Confusion Matrix</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Bilqizah Rahma Ilayya Syahdewi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
