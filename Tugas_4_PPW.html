@@ -1,0 +1,3243 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Analisis Performa Model Naive Bayes Berbasis Ekstraksi Fitur TF-IDF dan Skip-Gram pada Klasifikasi Teks Berita &#8212; Pencarian &amp; Penambangan Web</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Tugas_4_PPW';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Klasifikasi Berita Menggunakan Model Word2Vec (Skip-Gram) dan Algoritma Gaussian Naive Bayes" href="Tugas_3_Pencarian_%26_Penambangan_Web.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.jpeg" class="logo__image only-light" alt="Pencarian & Penambangan Web - Home"/>
+    <script>document.write(`<img src="_static/foto.jpeg" class="logo__image only-dark" alt="Pencarian & Penambangan Web - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Profile Repository
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Scraping%20Berita%20Detikcom_Tugas%201%20PPW.html">Crawling Berita Detikcom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Prepocessing_Tugas_2_PPW.html">Praproses Teks, Representasi TF-IDF, dan Reduksi Dimensi PCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas_3_Pencarian_%26_Penambangan_Web.html">Klasifikasi Berita Menggunakan Model Word2Vec (Skip-Gram) dan Algoritma Gaussian Naive Bayes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Analisis Performa Model Naive Bayes Berbasis Ekstraksi Fitur TF-IDF dan Skip-Gram pada Klasifikasi Teks Berita</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Tugas_4_PPW.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Analisis Performa Model Naive Bayes Berbasis Ekstraksi Fitur TF-IDF dan Skip-Gram pada Klasifikasi Teks Berita</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membaca-dataset">Membaca Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cek-dataset">Cek Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-kolom-teks">Menentukan Kolom Teks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing-teks">Preprocessing Teks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tokenisasi">Tokenisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-test-split">Train Test Split</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tf-idf">TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-matriks-tf-idf">Melihat Matriks TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-tf-idf">Naive Bayes TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-skip-gram">Membuat Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-vektor-skip-gram">Melihat Vektor Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ukuran-matriks-skip-gram">Ukuran Matriks Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-vektor-dokumen-dari-skip-gram">Membuat Vektor Dokumen dari Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-vektor-skip-gram">Tabel Vektor Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-ukuran-tf-idf-dan-skip-gram">Perbandingan Ukuran TF-IDF dan Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-skip-gram">Naive Bayes Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-akurasi">Perbandingan Akurasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search-tf-idf-naive-bayes">Grid Search TF-IDF + Naive Bayes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-semua-grid-search-tf-idf">Hasil Semua Grid Search TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search-skip-gram-naive-bayes">Grid Search Skip-Gram + Naive Bayes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-grid-search-skip-gram">Hasil Grid Search Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-model-terbaik">Evaluasi Model Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-perbandingan-akhir">Tabel Perbandingan Akhir</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-report-model-terbaik">Classification Report Model Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-matrix">Confusion Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-model-skip-gram-final">Menentukan Model Skip-Gram Final</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#save-model-pkl">Save Model .pkl</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="analisis-performa-model-naive-bayes-berbasis-ekstraksi-fitur-tf-idf-dan-skip-gram-pada-klasifikasi-teks-berita">
+<h1>Analisis Performa Model Naive Bayes Berbasis Ekstraksi Fitur TF-IDF dan Skip-Gram pada Klasifikasi Teks Berita<a class="headerlink" href="#analisis-performa-model-naive-bayes-berbasis-ekstraksi-fitur-tf-idf-dan-skip-gram-pada-klasifikasi-teks-berita" title="Permalink to this heading">#</a></h1>
+<section id="import-library">
+<h2>Import Library<a class="headerlink" href="#import-library" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Library dasar berhasil di-import."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Library dasar berhasil di-import.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="membaca-dataset">
+<h2>Membaca Dataset<a class="headerlink" href="#membaca-dataset" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_path</span> <span class="o">=</span> <span class="s2">"berita_detik_200_artikel.xlsx"</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Dataset berhasil dibaca."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran dataset:"</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Nama kolom:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">5 data pertama:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dataset berhasil dibaca.
+Ukuran dataset: (200, 3)
+
+Nama kolom:
+['id', 'isi_berita', 'label']
+
+5 data pertama:
+</pre></div>
+</div>
+<div class="output text_html">
+  <div id="df-80033e7f-46b6-44db-91f0-6ac4d69f7c58" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>isi_berita</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Kejuaraan Nasional Gokart 2026 yang berlangsun...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>PT Bank Negara Indonesia (Persero) Tbk atau BN...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Pelatih Timnas voli putra Indonesia, Reidel To...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Kontingen Indonesia bersiap menatap Asian Game...</td>
+      <td>sport</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Rizki Juniansyah siap menjalani debut di Asian...</td>
+      <td>sport</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-80033e7f-46b6-44db-91f0-6ac4d69f7c58')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-80033e7f-46b6-44db-91f0-6ac4d69f7c58 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-80033e7f-46b6-44db-91f0-6ac4d69f7c58');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="cek-dataset">
+<h2>Cek Dataset<a class="headerlink" href="#cek-dataset" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah data:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Jumlah missing value:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Distribusi label:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Jumlah data duplikat:"</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah data: 200
+
+Jumlah missing value:
+id            0
+isi_berita    0
+label         0
+dtype: int64
+
+Distribusi label:
+label
+sport      100
+finance    100
+Name: count, dtype: int64
+
+Jumlah data duplikat: 0
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="menentukan-kolom-teks">
+<h2>Menentukan Kolom Teks<a class="headerlink" href="#menentukan-kolom-teks" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TEXT_COLUMN</span> <span class="o">=</span> <span class="s2">"isi_berita"</span>
+<span class="n">TARGET_COLUMN</span> <span class="o">=</span> <span class="s2">"label"</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">TEXT_COLUMN</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">TARGET_COLUMN</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Kolom teks   :"</span><span class="p">,</span> <span class="n">TEXT_COLUMN</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Kolom target :"</span><span class="p">,</span> <span class="n">TARGET_COLUMN</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah teks  :"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Contoh teks:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">500</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Kolom teks   : isi_berita
+Kolom target : label
+Jumlah teks  : 200
+
+Contoh teks:
+Kejuaraan Nasional Gokart 2026 yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir. Romy Tahrizi berhasil menjadi Juara Nasional Shifter 150 tahun 2026 bersama Dewa United Motorsport setelah melalui perjuangan sepanjang musim. Kepastian tersebut diraih Romy pada Final Race Round 6 yang berlangsung pada 5-6 September 2026. Sebelumnya, pembalap yang juga berprofesi sebagai Lawyer di Kantor AHHN Lawyers tersebut masih menempati posisi kedua klasemen sementara deng
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="preprocessing-teks">
+<h2>Preprocessing Teks<a class="headerlink" href="#preprocessing-teks" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="c1"># Menghapus URL</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"http\S+|www\S+|https\S+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+    <span class="c1"># Menghapus HTML</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"&lt;.*?&gt;"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+    <span class="c1"># Hanya mempertahankan huruf</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[^a-z\s]"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+    <span class="c1"># Menghapus spasi berlebih</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">text</span>
+
+
+<span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">TEXT_COLUMN</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_text</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Preprocessing berhasil."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Sebelum:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">TEXT_COLUMN</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">300</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Sesudah:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">300</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Preprocessing berhasil.
+
+Sebelum:
+Kejuaraan Nasional Gokart 2026 yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir. Romy Tahrizi berhasil menjadi Juara Nasional Shifter 150 tahun 2026 bersama Dewa United Motorsport setelah melalui perjuangan sepanjang musim. Kepastian tersebut diraih Romy pada Fi
+
+Sesudah:
+kejuaraan nasional gokart yang berlangsung dalam enam putaran menghadirkan persaingan ketat hingga seri terakhir romy tahrizi berhasil menjadi juara nasional shifter tahun bersama dewa united motorsport setelah melalui perjuangan sepanjang musim kepastian tersebut diraih romy pada final race round y
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tokenisasi">
+<h2>Tokenisasi<a class="headerlink" href="#tokenisasi" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Tokenisasi berhasil."</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Contoh token:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">30</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Jumlah token dokumen pertama:"</span><span class="p">,</span>
+      <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tokenisasi berhasil.
+
+Contoh token:
+['kejuaraan', 'nasional', 'gokart', 'yang', 'berlangsung', 'dalam', 'enam', 'putaran', 'menghadirkan', 'persaingan', 'ketat', 'hingga', 'seri', 'terakhir', 'romy', 'tahrizi', 'berhasil', 'menjadi', 'juara', 'nasional', 'shifter', 'tahun', 'bersama', 'dewa', 'united', 'motorsport', 'setelah', 'melalui', 'perjuangan', 'sepanjang']
+
+Jumlah token dokumen pertama: 618
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="train-test-split">
+<h2>Train Test Split<a class="headerlink" href="#train-test-split" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"clean_text"</span><span class="p">],</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">TARGET_COLUMN</span><span class="p">],</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">TARGET_COLUMN</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Data training :"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Data testing  :"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Distribusi training:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Distribusi testing:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data training : 160
+Data testing  : 40
+
+Distribusi training:
+label
+finance    80
+sport      80
+Name: count, dtype: int64
+
+Distribusi testing:
+label
+finance    20
+sport      20
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tf-idf">
+<h2>TF-IDF<a class="headerlink" href="#tf-idf" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span>
+    <span class="n">max_features</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">X_train_tfidf</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_tfidf</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"TF-IDF berhasil dibuat."</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran matriks training :"</span><span class="p">,</span> <span class="n">X_train_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran matriks testing  :"</span><span class="p">,</span> <span class="n">X_test_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah vocabulary       :"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tfidf</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TF-IDF berhasil dibuat.
+Ukuran matriks training : (160, 6240)
+Ukuran matriks testing  : (40, 6240)
+Jumlah vocabulary       : 6240
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="melihat-matriks-tf-idf">
+<h2>Melihat Matriks TF-IDF<a class="headerlink" href="#melihat-matriks-tf-idf" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tfidf_feature_names</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+
+<span class="n">tfidf_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">X_train_tfidf</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span>
+    <span class="n">columns</span><span class="o">=</span><span class="n">tfidf_feature_names</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran tabel/matriks TF-IDF:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tfidf_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">tfidf_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:</span><span class="mi">20</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ukuran tabel/matriks TF-IDF:
+(160, 6240)
+</pre></div>
+</div>
+<div class="output text_html">
+  <div id="df-8b15f82d-d0f3-4d5a-91a4-af48abde0362" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>aaron</th>
+      <th>abadi</th>
+      <th>abdul</th>
+      <th>abimanyu</th>
+      <th>abraham</th>
+      <th>absen</th>
+      <th>absorber</th>
+      <th>abu</th>
+      <th>ac</th>
+      <th>acara</th>
+      <th>acd</th>
+      <th>aceh</th>
+      <th>ach</th>
+      <th>achmad</th>
+      <th>acosta</th>
+      <th>across</th>
+      <th>activities</th>
+      <th>activity</th>
+      <th>ada</th>
+      <th>adalah</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.076124</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.02408</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.012265</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-8b15f82d-d0f3-4d5a-91a4-af48abde0362')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-8b15f82d-d0f3-4d5a-91a4-af48abde0362 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-8b15f82d-d0f3-4d5a-91a4-af48abde0362');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="naive-bayes-tf-idf">
+<h2>Naive Bayes TF-IDF<a class="headerlink" href="#naive-bayes-tf-idf" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">classification_report</span>
+
+<span class="n">nb_tfidf</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span>
+
+<span class="n">nb_tfidf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_tfidf</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_pred_tfidf</span> <span class="o">=</span> <span class="n">nb_tfidf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_tfidf</span><span class="p">)</span>
+
+<span class="n">accuracy_tfidf</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_tfidf</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model Naive Bayes + TF-IDF berhasil dibuat."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Accuracy TF-IDF:"</span><span class="p">,</span> <span class="n">accuracy_tfidf</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Classification Report:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_tfidf</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model Naive Bayes + TF-IDF berhasil dibuat.
+Accuracy TF-IDF: 1.0
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     finance       1.00      1.00      1.00        20
+       sport       1.00      1.00      1.00        20
+
+    accuracy                           1.00        40
+   macro avg       1.00      1.00      1.00        40
+weighted avg       1.00      1.00      1.00        40
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="membuat-skip-gram">
+<h2>Membuat Skip-Gram<a class="headerlink" href="#membuat-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>gensim
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting gensim
+  Downloading gensim-4.4.0-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (8.4 kB)
+Requirement already satisfied: numpy&gt;=1.18.5 in /usr/local/lib/python3.13/dist-packages (from gensim) (2.1.3)
+Requirement already satisfied: scipy&gt;=1.7.0 in /usr/local/lib/python3.13/dist-packages (from gensim) (1.16.3)
+Requirement already satisfied: smart_open&gt;=1.8.1 in /usr/local/lib/python3.13/dist-packages (from gensim) (8.0.2)
+Requirement already satisfied: wrapt in /usr/local/lib/python3.13/dist-packages (from smart_open&gt;=1.8.1-&gt;gensim) (2.5.0)
+Downloading gensim-4.4.0-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (27.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">27.8/27.8 MB</span> <span class=" -Color -Color-Red">28.8 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hInstalling collected packages: gensim
+Successfully installed gensim-4.4.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gensim.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Word2Vec</span>
+
+<span class="n">sentences_train</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">X_train</span>
+<span class="p">]</span>
+
+<span class="n">skipgram</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span>
+    <span class="n">sentences</span><span class="o">=</span><span class="n">sentences_train</span><span class="p">,</span>
+    <span class="n">vector_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">window</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">min_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">sg</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model Skip-Gram berhasil dibuat."</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jumlah vocabulary:"</span><span class="p">,</span>
+      <span class="nb">len</span><span class="p">(</span><span class="n">skipgram</span><span class="o">.</span><span class="n">wv</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran vector:"</span><span class="p">,</span>
+      <span class="n">skipgram</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vector_size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model Skip-Gram berhasil dibuat.
+Jumlah vocabulary: 6263
+Ukuran vector: 100
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="melihat-vektor-skip-gram">
+<h2>Melihat Vektor Skip-Gram<a class="headerlink" href="#melihat-vektor-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">skipgram</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"5 kata pertama:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">words</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Kata:"</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Vector:"</span><span class="p">,</span> <span class="n">skipgram</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="n">word</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5 kata pertama:
+['dan', 'di', 'yang', 'untuk', 'ini']
+
+Kata: dan
+Vector: [-0.00847869  0.06901874 -0.10942101 -0.00438571 -0.15815794  0.23488224
+  0.11729699  0.11691973 -0.11410295 -0.03798796 -0.16727656  0.33145005
+  0.11734541  0.24462755 -0.04771006 -0.23455033  0.10795067 -0.49728733
+ -0.08024513  0.02075068  0.01299406  0.16651694 -0.1883593   0.3311683
+  0.22303112 -0.10200935 -0.26323953  0.18768176 -0.11046434 -0.0948609
+  0.02432787 -0.09261078  0.17874865  0.01093681  0.01728912 -0.11805745
+  0.24096173 -0.4215375  -0.09592813  0.16073684 -0.08927777 -0.0415126
+  0.31255087 -0.04798459 -0.05790659  0.03701359  0.01255188  0.3238082
+  0.42931134 -0.25420195 -0.14968443 -0.6609422   0.01869013 -0.04227096
+  0.10256841 -0.09055133 -0.1266227   0.00942516 -0.06823453  0.2141425
+ -0.00080171 -0.08314172 -0.3325268   0.16864161  0.17434213  0.05442747
+  0.03254731 -0.12549882 -0.30325013 -0.02281097 -0.09741128 -0.16748513
+ -0.1531833  -0.17021914  0.09660035 -0.03371751  0.03431552  0.04967818
+ -0.00278178 -0.04377154  0.22627449 -0.06215624 -0.12106741  0.00293783
+ -0.23676881  0.10966501 -0.20899062 -0.25084803 -0.16937985  0.22445032
+ -0.21306421  0.2282339   0.13120702 -0.15144594  0.09306184 -0.06343088
+  0.01438683  0.16555458 -0.18645917 -0.12182572]
+
+Kata: di
+Vector: [ 0.08604316  0.0012385  -0.05435635  0.00765224 -0.03010038  0.43311143
+  0.14138043  0.24953818 -0.11858593  0.25383475 -0.36882544  0.2625324
+  0.18703002  0.21249674  0.05910708 -0.20754896  0.07911319 -0.6556898
+ -0.18768494  0.0960866  -0.07048475  0.29430968  0.05156732  0.5456571
+  0.3360522  -0.0149785  -0.41309437  0.31431153  0.03141659 -0.12188783
+ -0.05637532 -0.09001027  0.04078851 -0.05900899  0.13982724 -0.10566965
+  0.12517782 -0.6155731   0.05938059  0.256483    0.14528242 -0.4447865
+  0.13850552 -0.13461047  0.21825051  0.0436254   0.05467318  0.05436826
+  0.4434762  -0.14434893  0.06945401 -0.647348    0.0084705  -0.30208576
+  0.02439654  0.06449214 -0.26415795  0.10999446 -0.0267087   0.19733997
+ -0.02151076  0.16213644 -0.18534583  0.16955769  0.26986635  0.19107081
+  0.00326736 -0.27991173 -0.25913918  0.00149346 -0.17975004 -0.13649471
+ -0.2952805  -0.0468761   0.1103889   0.14822596  0.06456132 -0.18748784
+  0.18404002  0.06770631  0.20074333  0.04267136 -0.10478276 -0.00232571
+ -0.33920494  0.00853529 -0.2085536  -0.16514313 -0.30139312  0.10187545
+ -0.10166753  0.35701782  0.08829743 -0.19701795  0.15658373 -0.20343873
+  0.12923974  0.01941301 -0.243515    0.07596154]
+
+Kata: yang
+Vector: [ 9.91906822e-02  3.54763411e-04 -6.53886050e-02  7.08971964e-03
+ -1.18368044e-01  1.21372566e-01  1.59303501e-01  2.17201084e-01
+ -8.66919309e-02 -6.09373786e-02 -4.06284034e-01  2.06591979e-01
+  2.51714706e-01  3.34334195e-01 -1.70914736e-02 -3.38662595e-01
+  1.01027638e-01 -4.94800121e-01 -2.74805516e-01  2.36724522e-02
+ -8.94379988e-02  1.61548793e-01 -7.87981004e-02  2.92733282e-01
+  1.51887327e-01 -1.75057128e-01 -3.76433104e-01  2.54525036e-01
+ -1.82193488e-01  1.11218924e-06 -6.70966506e-02 -7.40933195e-02
+  1.78098097e-01 -2.26838309e-02  6.08802065e-02  6.61011785e-02
+  2.66625702e-01 -5.05128443e-01 -8.58348384e-02  1.71633556e-01
+ -2.93894708e-02 -2.34236866e-02  3.35922927e-01 -9.40172896e-02
+  1.46708116e-01  6.72420813e-03  1.18017048e-01  2.70815790e-01
+  4.74862337e-01 -2.71425158e-01 -2.75619537e-01 -6.90787971e-01
+ -7.14005306e-02 -3.70494388e-02 -1.08599439e-02 -1.34582236e-01
+ -1.04281433e-01  7.35465810e-02 -4.74221073e-02  2.86475837e-01
+ -1.04737347e-02 -1.23016365e-01 -2.80241549e-01  1.85103655e-01
+  2.87917882e-01  3.51647399e-02  1.20895758e-01 -1.58426836e-01
+ -2.46759549e-01  4.43516904e-03 -1.75178260e-01 -2.23148838e-01
+ -2.71728098e-01 -1.13416746e-01  7.34955519e-02 -6.80416152e-02
+  8.65426287e-02  3.45491059e-02 -8.43348540e-03 -4.56167124e-02
+  2.15935677e-01 -9.39808488e-02 -1.20753013e-01  4.15564328e-02
+ -2.76852340e-01 -1.99367590e-02 -2.39146799e-01 -3.58856767e-01
+ -1.50102735e-01  1.63851127e-01 -1.72743648e-01  2.72682905e-01
+  8.14200565e-02 -2.70156264e-01  5.50420769e-02 -1.09304689e-01
+  8.99692625e-03  9.19807628e-02 -1.60399392e-01 -1.74049571e-01]
+
+Kata: untuk
+Vector: [ 0.03198264 -0.01977561 -0.13867806  0.01229939 -0.14676782  0.16392933
+  0.09866648  0.14491744 -0.11767068 -0.05449528 -0.30355334  0.22169828
+  0.11051439  0.2935159  -0.0417032  -0.30912533  0.13107547 -0.44661388
+ -0.11495358  0.0442219  -0.05832687  0.14990793 -0.053673    0.34127223
+  0.16509528 -0.09176637 -0.33046457  0.20375288 -0.14645898 -0.04421962
+ -0.01627301 -0.12182821  0.15877396 -0.00092838  0.07330572 -0.02467972
+  0.25574294 -0.5769305  -0.06757503  0.21630897 -0.08035581 -0.06997088
+  0.30700603 -0.07558534  0.05745701  0.08800694  0.12650065  0.26755422
+  0.3757985  -0.22327682 -0.20407252 -0.7237281  -0.08720184 -0.0042846
+  0.06519104 -0.07794274 -0.07447822  0.12501281 -0.11992484  0.3135777
+  0.01154002 -0.05387944 -0.339207    0.24712673  0.20875566  0.04928785
+  0.0770843  -0.18376078 -0.29169658 -0.03259367 -0.20241998 -0.13970247
+ -0.21260424 -0.09519334  0.09513367 -0.08514848  0.0494058   0.01948873
+ -0.03012769 -0.10672547  0.23134631 -0.05106163 -0.07593638 -0.00152274
+ -0.314525    0.020422   -0.17202653 -0.29334447 -0.18657164  0.12703744
+ -0.14199618  0.22253174  0.07668753 -0.28239784  0.03437674 -0.03290189
+  0.02671978  0.14034033 -0.14361063 -0.11002832]
+
+Kata: ini
+Vector: [ 0.22884607 -0.1987353  -0.12805445  0.14458753 -0.06744289  0.08733595
+  0.19694053  0.16090983 -0.01394094 -0.14994854 -0.54893875  0.12090511
+  0.29111174  0.28457007 -0.10691222 -0.30440715  0.22860774 -0.46453637
+ -0.2531437  -0.01248634 -0.04420819  0.1661793  -0.01667436  0.27473512
+  0.09195248 -0.19088672 -0.37644532  0.2552204  -0.29902193  0.0513715
+ -0.25029755 -0.08786595  0.20554827 -0.1414796   0.03422466 -0.0642526
+  0.22684672 -0.5376043  -0.02131843  0.22546405 -0.06767978  0.02618635
+  0.27672157 -0.2145488   0.12201538  0.06672498  0.12644084  0.32318616
+  0.49309137 -0.2597575  -0.25969467 -0.63692814 -0.02570943 -0.08533452
+ -0.02618395 -0.14238906 -0.0849357   0.06840967  0.03899496  0.31668356
+  0.13303481 -0.12239546 -0.28300497  0.26854205  0.2685605   0.03248965
+  0.1783466  -0.16252714 -0.40599608  0.03410375 -0.15674897 -0.06847162
+ -0.22823875 -0.1081372   0.11756701 -0.09447137  0.12039775  0.00172936
+ -0.01230074 -0.14858614  0.1845403  -0.12376174 -0.23385772  0.26351798
+ -0.24640588 -0.11561746 -0.18817024 -0.38500217 -0.10154825  0.12713864
+ -0.16161707  0.4115161   0.09995362 -0.31648454  0.02029357 -0.08144521
+ -0.06257208  0.12258029 -0.06357314 -0.04515396]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="ukuran-matriks-skip-gram">
+<h2>Ukuran Matriks Skip-Gram<a class="headerlink" href="#ukuran-matriks-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">skipgram_matrix</span> <span class="o">=</span> <span class="n">skipgram</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vectors</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran matriks Skip-Gram:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">skipgram_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Jumlah kata dalam vocabulary:"</span><span class="p">,</span>
+      <span class="n">skipgram_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Dimensi vector setiap kata:"</span><span class="p">,</span>
+      <span class="n">skipgram_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ukuran matriks Skip-Gram:
+(6263, 100)
+
+Jumlah kata dalam vocabulary: 6263
+Dimensi vector setiap kata: 100
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="membuat-vektor-dokumen-dari-skip-gram">
+<h2>Membuat Vektor Dokumen dari Skip-Gram<a class="headerlink" href="#membuat-vektor-dokumen-dari-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">document_vector</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+    <span class="n">vectors</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">:</span>
+            <span class="n">vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">[</span><span class="n">word</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">vector_size</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="n">X_train_skipgram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="n">document_vector</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">skipgram</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">X_train</span>
+<span class="p">])</span>
+
+<span class="n">X_test_skipgram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="n">document_vector</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">skipgram</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">X_test</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Vektor dokumen Skip-Gram berhasil dibuat."</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran training:"</span><span class="p">,</span>
+      <span class="n">X_train_skipgram</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran testing:"</span><span class="p">,</span>
+      <span class="n">X_test_skipgram</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Vektor dokumen Skip-Gram berhasil dibuat.
+Ukuran training: (160, 100)
+Ukuran testing: (40, 100)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tabel-vektor-skip-gram">
+<h2>Tabel Vektor Skip-Gram<a class="headerlink" href="#tabel-vektor-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding_cols</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"Embedding_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_train_skipgram</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+
+<span class="n">skipgram_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">X_train_skipgram</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="n">embedding_cols</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Ukuran tabel Skip-Gram:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">skipgram_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">skipgram_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ukuran tabel Skip-Gram:
+(160, 100)
+</pre></div>
+</div>
+<div class="output text_html">
+  <div id="df-5296d815-fc78-4ea3-ab45-9bcccac63631" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Embedding_1</th>
+      <th>Embedding_2</th>
+      <th>Embedding_3</th>
+      <th>Embedding_4</th>
+      <th>Embedding_5</th>
+      <th>Embedding_6</th>
+      <th>Embedding_7</th>
+      <th>Embedding_8</th>
+      <th>Embedding_9</th>
+      <th>Embedding_10</th>
+      <th>...</th>
+      <th>Embedding_91</th>
+      <th>Embedding_92</th>
+      <th>Embedding_93</th>
+      <th>Embedding_94</th>
+      <th>Embedding_95</th>
+      <th>Embedding_96</th>
+      <th>Embedding_97</th>
+      <th>Embedding_98</th>
+      <th>Embedding_99</th>
+      <th>Embedding_100</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.003843</td>
+      <td>0.064657</td>
+      <td>-0.109907</td>
+      <td>0.039634</td>
+      <td>-0.155368</td>
+      <td>0.466044</td>
+      <td>0.229905</td>
+      <td>0.208923</td>
+      <td>-0.189207</td>
+      <td>0.124246</td>
+      <td>...</td>
+      <td>-0.182962</td>
+      <td>0.206672</td>
+      <td>0.237861</td>
+      <td>-0.131808</td>
+      <td>0.079415</td>
+      <td>-0.165210</td>
+      <td>0.017473</td>
+      <td>0.197008</td>
+      <td>-0.212568</td>
+      <td>-0.087693</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.021867</td>
+      <td>-0.022066</td>
+      <td>-0.057720</td>
+      <td>0.006144</td>
+      <td>-0.103318</td>
+      <td>0.176550</td>
+      <td>0.118409</td>
+      <td>0.127755</td>
+      <td>-0.078232</td>
+      <td>-0.006144</td>
+      <td>...</td>
+      <td>-0.133750</td>
+      <td>0.188047</td>
+      <td>0.084022</td>
+      <td>-0.140950</td>
+      <td>0.041874</td>
+      <td>-0.070450</td>
+      <td>0.029283</td>
+      <td>0.112280</td>
+      <td>-0.133079</td>
+      <td>-0.064705</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.002891</td>
+      <td>0.064857</td>
+      <td>-0.111132</td>
+      <td>0.039769</td>
+      <td>-0.156395</td>
+      <td>0.470002</td>
+      <td>0.233127</td>
+      <td>0.212114</td>
+      <td>-0.190485</td>
+      <td>0.125641</td>
+      <td>...</td>
+      <td>-0.184655</td>
+      <td>0.209790</td>
+      <td>0.240678</td>
+      <td>-0.134332</td>
+      <td>0.080478</td>
+      <td>-0.167453</td>
+      <td>0.017052</td>
+      <td>0.199132</td>
+      <td>-0.214600</td>
+      <td>-0.089300</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.030714</td>
+      <td>-0.027999</td>
+      <td>-0.066334</td>
+      <td>0.007555</td>
+      <td>-0.120877</td>
+      <td>0.201573</td>
+      <td>0.135296</td>
+      <td>0.154759</td>
+      <td>-0.090789</td>
+      <td>-0.006821</td>
+      <td>...</td>
+      <td>-0.157750</td>
+      <td>0.218176</td>
+      <td>0.088319</td>
+      <td>-0.163079</td>
+      <td>0.052317</td>
+      <td>-0.079894</td>
+      <td>0.030728</td>
+      <td>0.127119</td>
+      <td>-0.152882</td>
+      <td>-0.073314</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.034700</td>
+      <td>-0.012568</td>
+      <td>-0.067298</td>
+      <td>0.011516</td>
+      <td>-0.113191</td>
+      <td>0.232950</td>
+      <td>0.139861</td>
+      <td>0.157023</td>
+      <td>-0.093325</td>
+      <td>0.034678</td>
+      <td>...</td>
+      <td>-0.157522</td>
+      <td>0.218805</td>
+      <td>0.102533</td>
+      <td>-0.127536</td>
+      <td>0.074315</td>
+      <td>-0.083465</td>
+      <td>0.026112</td>
+      <td>0.121623</td>
+      <td>-0.162028</td>
+      <td>-0.066216</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.007651</td>
+      <td>-0.020311</td>
+      <td>-0.062106</td>
+      <td>0.011065</td>
+      <td>-0.117511</td>
+      <td>0.211997</td>
+      <td>0.130218</td>
+      <td>0.152014</td>
+      <td>-0.090185</td>
+      <td>-0.005000</td>
+      <td>...</td>
+      <td>-0.158827</td>
+      <td>0.207929</td>
+      <td>0.099077</td>
+      <td>-0.150344</td>
+      <td>0.045048</td>
+      <td>-0.086482</td>
+      <td>0.038900</td>
+      <td>0.125940</td>
+      <td>-0.152763</td>
+      <td>-0.067073</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.025110</td>
+      <td>-0.021142</td>
+      <td>-0.055650</td>
+      <td>0.010441</td>
+      <td>-0.103134</td>
+      <td>0.194238</td>
+      <td>0.127325</td>
+      <td>0.142128</td>
+      <td>-0.082932</td>
+      <td>0.003584</td>
+      <td>...</td>
+      <td>-0.138794</td>
+      <td>0.190074</td>
+      <td>0.087087</td>
+      <td>-0.141561</td>
+      <td>0.048331</td>
+      <td>-0.080367</td>
+      <td>0.025939</td>
+      <td>0.111854</td>
+      <td>-0.132474</td>
+      <td>-0.066135</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.022284</td>
+      <td>-0.042007</td>
+      <td>-0.065312</td>
+      <td>0.006362</td>
+      <td>-0.120211</td>
+      <td>0.183437</td>
+      <td>0.132580</td>
+      <td>0.143730</td>
+      <td>-0.083924</td>
+      <td>-0.030519</td>
+      <td>...</td>
+      <td>-0.147648</td>
+      <td>0.210757</td>
+      <td>0.089408</td>
+      <td>-0.176987</td>
+      <td>0.044672</td>
+      <td>-0.067463</td>
+      <td>0.041035</td>
+      <td>0.130942</td>
+      <td>-0.144449</td>
+      <td>-0.076611</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.008482</td>
+      <td>-0.024741</td>
+      <td>-0.059582</td>
+      <td>0.011967</td>
+      <td>-0.108645</td>
+      <td>0.176672</td>
+      <td>0.117918</td>
+      <td>0.117668</td>
+      <td>-0.076840</td>
+      <td>-0.009527</td>
+      <td>...</td>
+      <td>-0.132549</td>
+      <td>0.174051</td>
+      <td>0.087229</td>
+      <td>-0.138778</td>
+      <td>0.044211</td>
+      <td>-0.059999</td>
+      <td>0.035827</td>
+      <td>0.112980</td>
+      <td>-0.130203</td>
+      <td>-0.068456</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.012515</td>
+      <td>-0.022776</td>
+      <td>-0.067672</td>
+      <td>0.020121</td>
+      <td>-0.106009</td>
+      <td>0.221159</td>
+      <td>0.134245</td>
+      <td>0.130177</td>
+      <td>-0.085794</td>
+      <td>0.015090</td>
+      <td>...</td>
+      <td>-0.136192</td>
+      <td>0.184531</td>
+      <td>0.104456</td>
+      <td>-0.136101</td>
+      <td>0.043920</td>
+      <td>-0.081063</td>
+      <td>0.023266</td>
+      <td>0.108341</td>
+      <td>-0.139613</td>
+      <td>-0.059166</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 100 columns</p>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-5296d815-fc78-4ea3-ab45-9bcccac63631')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-5296d815-fc78-4ea3-ab45-9bcccac63631 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-5296d815-fc78-4ea3-ab45-9bcccac63631');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="perbandingan-ukuran-tf-idf-dan-skip-gram">
+<h2>Perbandingan Ukuran TF-IDF dan Skip-Gram<a class="headerlink" href="#perbandingan-ukuran-tf-idf-dan-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comparison_space</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Metode"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"TF-IDF"</span><span class="p">,</span>
+        <span class="s2">"Skip-Gram"</span>
+    <span class="p">],</span>
+    <span class="s2">"Jumlah Dokumen Training"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">X_train_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">X_train_skipgram</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">],</span>
+    <span class="s2">"Jumlah Fitur/Dimensi"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">X_train_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">X_train_skipgram</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">],</span>
+    <span class="s2">"Ukuran Matriks"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">X_train_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">X_train_skipgram</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">comparison_space</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-7dae3094-ac1e-45c5-86d1-525a29096799" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metode</th>
+      <th>Jumlah Dokumen Training</th>
+      <th>Jumlah Fitur/Dimensi</th>
+      <th>Ukuran Matriks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TF-IDF</td>
+      <td>160</td>
+      <td>6240</td>
+      <td>(160, 6240)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Skip-Gram</td>
+      <td>160</td>
+      <td>100</td>
+      <td>(160, 100)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-7dae3094-ac1e-45c5-86d1-525a29096799')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-7dae3094-ac1e-45c5-86d1-525a29096799 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-7dae3094-ac1e-45c5-86d1-525a29096799');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+  <div id="id_e46d0479-1a77-4687-8a2d-a15ea15b4805">
+    <style>
+      .colab-df-generate {
+        background-color: #E8F0FE;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        fill: #1967D2;
+        height: 32px;
+        padding: 0 0 0 0;
+        width: 32px;
+      }
+
+      .colab-df-generate:hover {
+        background-color: #E2EBFA;
+        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+        fill: #174EA6;
+      }
+
+      [theme=dark] .colab-df-generate {
+        background-color: #3B4455;
+        fill: #D2E3FC;
+      }
+
+      [theme=dark] .colab-df-generate:hover {
+        background-color: #434B5C;
+        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+        fill: #FFFFFF;
+      }
+    </style>
+    <button class="colab-df-generate" onclick="generateWithVariable('comparison_space')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_e46d0479-1a77-4687-8a2d-a15ea15b4805 button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('comparison_space');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="naive-bayes-skip-gram">
+<h2>Naive Bayes Skip-Gram<a class="headerlink" href="#naive-bayes-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nb_skipgram</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span>
+
+<span class="c1"># Karena MultinomialNB membutuhkan nilai non-negatif,</span>
+<span class="c1"># embedding dinormalisasi terlebih dahulu.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinMaxScaler</span>
+
+<span class="n">scaler_skipgram</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+
+<span class="n">X_train_skipgram_scaled</span> <span class="o">=</span> <span class="n">scaler_skipgram</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
+    <span class="n">X_train_skipgram</span>
+<span class="p">)</span>
+
+<span class="n">X_test_skipgram_scaled</span> <span class="o">=</span> <span class="n">scaler_skipgram</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+    <span class="n">X_test_skipgram</span>
+<span class="p">)</span>
+
+<span class="n">nb_skipgram</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X_train_skipgram_scaled</span><span class="p">,</span>
+    <span class="n">y_train</span>
+<span class="p">)</span>
+
+<span class="n">y_pred_skipgram</span> <span class="o">=</span> <span class="n">nb_skipgram</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">X_test_skipgram_scaled</span>
+<span class="p">)</span>
+
+<span class="n">accuracy_skipgram</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">y_pred_skipgram</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model Naive Bayes + Skip-Gram berhasil."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Accuracy Skip-Gram:"</span><span class="p">,</span> <span class="n">accuracy_skipgram</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Classification Report:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_skipgram</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model Naive Bayes + Skip-Gram berhasil.
+Accuracy Skip-Gram: 0.825
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     finance       1.00      0.65      0.79        20
+       sport       0.74      1.00      0.85        20
+
+    accuracy                           0.82        40
+   macro avg       0.87      0.82      0.82        40
+weighted avg       0.87      0.82      0.82        40
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="perbandingan-akurasi">
+<h2>Perbandingan Akurasi<a class="headerlink" href="#perbandingan-akurasi" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comparison_accuracy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Model"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"TF-IDF + Naive Bayes"</span><span class="p">,</span>
+        <span class="s2">"Skip-Gram + Naive Bayes"</span>
+    <span class="p">],</span>
+    <span class="s2">"Accuracy"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">accuracy_tfidf</span><span class="p">,</span>
+        <span class="n">accuracy_skipgram</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">comparison_accuracy</span><span class="p">[</span><span class="s2">"Accuracy (%)"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">comparison_accuracy</span><span class="p">[</span><span class="s2">"Accuracy"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">comparison_accuracy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-f5e8a34b-9de8-408c-b704-73c6d618be26" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>Accuracy</th>
+      <th>Accuracy (%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TF-IDF + Naive Bayes</td>
+      <td>1.000</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Skip-Gram + Naive Bayes</td>
+      <td>0.825</td>
+      <td>82.5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-f5e8a34b-9de8-408c-b704-73c6d618be26')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-f5e8a34b-9de8-408c-b704-73c6d618be26 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-f5e8a34b-9de8-408c-b704-73c6d618be26');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+  <div id="id_3e1eb998-1b4d-462b-8cb3-90cfcf8c13aa">
+    <style>
+      .colab-df-generate {
+        background-color: #E8F0FE;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        fill: #1967D2;
+        height: 32px;
+        padding: 0 0 0 0;
+        width: 32px;
+      }
+
+      .colab-df-generate:hover {
+        background-color: #E2EBFA;
+        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+        fill: #174EA6;
+      }
+
+      [theme=dark] .colab-df-generate {
+        background-color: #3B4455;
+        fill: #D2E3FC;
+      }
+
+      [theme=dark] .colab-df-generate:hover {
+        background-color: #434B5C;
+        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+        fill: #FFFFFF;
+      }
+    </style>
+    <button class="colab-df-generate" onclick="generateWithVariable('comparison_accuracy')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_3e1eb998-1b4d-462b-8cb3-90cfcf8c13aa button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('comparison_accuracy');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="grid-search-tf-idf-naive-bayes">
+<h2>Grid Search TF-IDF + Naive Bayes<a class="headerlink" href="#grid-search-tf-idf-naive-bayes" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+<span class="n">param_grid_tfidf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"alpha"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="mf">0.01</span><span class="p">,</span>
+        <span class="mf">0.1</span><span class="p">,</span>
+        <span class="mf">0.5</span><span class="p">,</span>
+        <span class="mf">1.0</span><span class="p">,</span>
+        <span class="mf">2.0</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">grid_tfidf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">MultinomialNB</span><span class="p">(),</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid_tfidf</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">"accuracy"</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="n">grid_tfidf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X_train_tfidf</span><span class="p">,</span>
+    <span class="n">y_train</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Grid Search TF-IDF selesai."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Best Parameter:"</span><span class="p">,</span>
+      <span class="n">grid_tfidf</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Best CV Score:"</span><span class="p">,</span>
+      <span class="n">grid_tfidf</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Grid Search TF-IDF selesai.
+Best Parameter: {'alpha': 0.01}
+Best CV Score: 0.9875
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hasil-semua-grid-search-tf-idf">
+<h2>Hasil Semua Grid Search TF-IDF<a class="headerlink" href="#hasil-semua-grid-search-tf-idf" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results_tfidf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">grid_tfidf</span><span class="o">.</span><span class="n">cv_results_</span>
+<span class="p">)</span>
+
+<span class="n">results_tfidf</span><span class="p">[</span>
+    <span class="p">[</span>
+        <span class="s2">"param_alpha"</span><span class="p">,</span>
+        <span class="s2">"mean_test_score"</span><span class="p">,</span>
+        <span class="s2">"std_test_score"</span><span class="p">,</span>
+        <span class="s2">"rank_test_score"</span>
+    <span class="p">]</span>
+<span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"rank_test_score"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-00574842-51ad-487b-98f8-a2e91846edd2" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>param_alpha</th>
+      <th>mean_test_score</th>
+      <th>std_test_score</th>
+      <th>rank_test_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.01</td>
+      <td>0.98750</td>
+      <td>0.015309</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.10</td>
+      <td>0.98750</td>
+      <td>0.015309</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.50</td>
+      <td>0.98125</td>
+      <td>0.015309</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.00</td>
+      <td>0.98125</td>
+      <td>0.015309</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.00</td>
+      <td>0.97500</td>
+      <td>0.012500</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-00574842-51ad-487b-98f8-a2e91846edd2')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-00574842-51ad-487b-98f8-a2e91846edd2 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-00574842-51ad-487b-98f8-a2e91846edd2');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="grid-search-skip-gram-naive-bayes">
+<h2>Grid Search Skip-Gram + Naive Bayes<a class="headerlink" href="#grid-search-skip-gram-naive-bayes" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param_grid_skipgram</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"alpha"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="mf">0.01</span><span class="p">,</span>
+        <span class="mf">0.1</span><span class="p">,</span>
+        <span class="mf">0.5</span><span class="p">,</span>
+        <span class="mf">1.0</span><span class="p">,</span>
+        <span class="mf">2.0</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">grid_skipgram</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">MultinomialNB</span><span class="p">(),</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid_skipgram</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">"accuracy"</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="n">grid_skipgram</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X_train_skipgram_scaled</span><span class="p">,</span>
+    <span class="n">y_train</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Grid Search Skip-Gram selesai."</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Best Parameter:"</span><span class="p">,</span>
+      <span class="n">grid_skipgram</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Best CV Score:"</span><span class="p">,</span>
+      <span class="n">grid_skipgram</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Grid Search Skip-Gram selesai.
+Best Parameter: {'alpha': 0.01}
+Best CV Score: 0.76875
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hasil-grid-search-skip-gram">
+<h2>Hasil Grid Search Skip-Gram<a class="headerlink" href="#hasil-grid-search-skip-gram" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results_skipgram</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">grid_skipgram</span><span class="o">.</span><span class="n">cv_results_</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">results_skipgram</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="s2">"param_alpha"</span><span class="p">,</span>
+            <span class="s2">"mean_test_score"</span><span class="p">,</span>
+            <span class="s2">"std_test_score"</span><span class="p">,</span>
+            <span class="s2">"rank_test_score"</span>
+        <span class="p">]</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"rank_test_score"</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-d6371188-fd93-40b4-8885-43d02219048d" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>param_alpha</th>
+      <th>mean_test_score</th>
+      <th>std_test_score</th>
+      <th>rank_test_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.01</td>
+      <td>0.76875</td>
+      <td>0.046771</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.10</td>
+      <td>0.76875</td>
+      <td>0.046771</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.50</td>
+      <td>0.76250</td>
+      <td>0.042390</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.00</td>
+      <td>0.73750</td>
+      <td>0.037500</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.00</td>
+      <td>0.72500</td>
+      <td>0.036443</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-d6371188-fd93-40b4-8885-43d02219048d')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-d6371188-fd93-40b4-8885-43d02219048d button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-d6371188-fd93-40b4-8885-43d02219048d');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="evaluasi-model-terbaik">
+<h2>Evaluasi Model Terbaik<a class="headerlink" href="#evaluasi-model-terbaik" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best_tfidf_model</span> <span class="o">=</span> <span class="n">grid_tfidf</span><span class="o">.</span><span class="n">best_estimator_</span>
+<span class="n">best_skipgram_model</span> <span class="o">=</span> <span class="n">grid_skipgram</span><span class="o">.</span><span class="n">best_estimator_</span>
+
+<span class="n">pred_best_tfidf</span> <span class="o">=</span> <span class="n">best_tfidf_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">X_test_tfidf</span>
+<span class="p">)</span>
+
+<span class="n">pred_best_skipgram</span> <span class="o">=</span> <span class="n">best_skipgram_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">X_test_skipgram_scaled</span>
+<span class="p">)</span>
+
+<span class="n">acc_best_tfidf</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">pred_best_tfidf</span>
+<span class="p">)</span>
+
+<span class="n">acc_best_skipgram</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">pred_best_skipgram</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Accuracy terbaik TF-IDF:"</span><span class="p">,</span>
+      <span class="n">acc_best_tfidf</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Accuracy terbaik Skip-Gram:"</span><span class="p">,</span>
+      <span class="n">acc_best_skipgram</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy terbaik TF-IDF: 1.0
+Accuracy terbaik Skip-Gram: 0.825
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tabel-perbandingan-akhir">
+<h2>Tabel Perbandingan Akhir<a class="headerlink" href="#tabel-perbandingan-akhir" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_comparison</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Model"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"TF-IDF + Naive Bayes"</span><span class="p">,</span>
+        <span class="s2">"Skip-Gram + Naive Bayes"</span>
+    <span class="p">],</span>
+    <span class="s2">"Best Alpha"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">grid_tfidf</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s2">"alpha"</span><span class="p">],</span>
+        <span class="n">grid_skipgram</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s2">"alpha"</span><span class="p">]</span>
+    <span class="p">],</span>
+    <span class="s2">"CV Accuracy"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">grid_tfidf</span><span class="o">.</span><span class="n">best_score_</span><span class="p">,</span>
+        <span class="n">grid_skipgram</span><span class="o">.</span><span class="n">best_score_</span>
+    <span class="p">],</span>
+    <span class="s2">"Test Accuracy"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">acc_best_tfidf</span><span class="p">,</span>
+        <span class="n">acc_best_skipgram</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">final_comparison</span><span class="p">[</span><span class="s2">"Test Accuracy (%)"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">final_comparison</span><span class="p">[</span><span class="s2">"Test Accuracy"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">final_comparison</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-c059666b-f910-4e62-b9bf-3698afaf1d64" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>Best Alpha</th>
+      <th>CV Accuracy</th>
+      <th>Test Accuracy</th>
+      <th>Test Accuracy (%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TF-IDF + Naive Bayes</td>
+      <td>0.01</td>
+      <td>0.98750</td>
+      <td>1.000</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Skip-Gram + Naive Bayes</td>
+      <td>0.01</td>
+      <td>0.76875</td>
+      <td>0.825</td>
+      <td>82.5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-c059666b-f910-4e62-b9bf-3698afaf1d64')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-c059666b-f910-4e62-b9bf-3698afaf1d64 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-c059666b-f910-4e62-b9bf-3698afaf1d64');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+  <div id="id_dd4f8fb0-79a0-4143-beda-00541275e67d">
+    <style>
+      .colab-df-generate {
+        background-color: #E8F0FE;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        fill: #1967D2;
+        height: 32px;
+        padding: 0 0 0 0;
+        width: 32px;
+      }
+
+      .colab-df-generate:hover {
+        background-color: #E2EBFA;
+        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+        fill: #174EA6;
+      }
+
+      [theme=dark] .colab-df-generate {
+        background-color: #3B4455;
+        fill: #D2E3FC;
+      }
+
+      [theme=dark] .colab-df-generate:hover {
+        background-color: #434B5C;
+        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+        fill: #FFFFFF;
+      }
+    </style>
+    <button class="colab-df-generate" onclick="generateWithVariable('final_comparison')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_dd4f8fb0-79a0-4143-beda-00541275e67d button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('final_comparison');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="classification-report-model-terbaik">
+<h2>Classification Report Model Terbaik<a class="headerlink" href="#classification-report-model-terbaik" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"=== TF-IDF + NAIVE BAYES ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">classification_report</span><span class="p">(</span>
+        <span class="n">y_test</span><span class="p">,</span>
+        <span class="n">pred_best_tfidf</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">=== SKIP-GRAM + NAIVE BAYES ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="n">classification_report</span><span class="p">(</span>
+        <span class="n">y_test</span><span class="p">,</span>
+        <span class="n">pred_best_skipgram</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== TF-IDF + NAIVE BAYES ===
+              precision    recall  f1-score   support
+
+     finance       1.00      1.00      1.00        20
+       sport       1.00      1.00      1.00        20
+
+    accuracy                           1.00        40
+   macro avg       1.00      1.00      1.00        40
+weighted avg       1.00      1.00      1.00        40
+
+
+=== SKIP-GRAM + NAIVE BAYES ===
+              precision    recall  f1-score   support
+
+     finance       1.00      0.65      0.79        20
+       sport       0.74      1.00      0.85        20
+
+    accuracy                           0.82        40
+   macro avg       0.87      0.82      0.82        40
+weighted avg       0.87      0.82      0.82        40
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="confusion-matrix">
+<h2>Confusion Matrix<a class="headerlink" href="#confusion-matrix" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">confusion_matrix</span>
+
+<span class="n">cm_tfidf</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">pred_best_tfidf</span>
+<span class="p">)</span>
+
+<span class="n">cm_skipgram</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">pred_best_skipgram</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Confusion Matrix TF-IDF:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cm_tfidf</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Confusion Matrix Skip-Gram:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cm_skipgram</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Confusion Matrix TF-IDF:
+[[20  0]
+ [ 0 20]]
+
+Confusion Matrix Skip-Gram:
+[[13  7]
+ [ 0 20]]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="menentukan-model-skip-gram-final">
+<h2>Menentukan Model Skip-Gram Final<a class="headerlink" href="#menentukan-model-skip-gram-final" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_skipgram_model</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"word2vec"</span><span class="p">:</span> <span class="n">skipgram</span><span class="p">,</span>
+    <span class="s2">"scaler"</span><span class="p">:</span> <span class="n">scaler_skipgram</span><span class="p">,</span>
+    <span class="s2">"classifier"</span><span class="p">:</span> <span class="n">best_skipgram_model</span><span class="p">,</span>
+    <span class="s2">"vector_size"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"window"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"sg"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"seed"</span><span class="p">:</span> <span class="mi">42</span>
+<span class="p">}</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Komponen model Skip-Gram:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">final_skipgram_model</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Komponen model Skip-Gram:
+dict_keys(['word2vec', 'scaler', 'classifier', 'vector_size', 'window', 'sg', 'seed'])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="save-model-pkl">
+<h2>Save Model .pkl<a class="headerlink" href="#save-model-pkl" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"skipgram_model.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">skipgram</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model Skip-Gram berhasil disimpan."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"File: skipgram_model.pkl"</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"naive_bayes_model.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">best_skipgram_model</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Model Naive Bayes berhasil disimpan."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"File: naive_bayes_model.pkl"</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"scaler_skipgram.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">scaler_skipgram</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Scaler Skip-Gram berhasil disimpan."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"File: scaler_skipgram.pkl"</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"skipgram_model.pkl"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">loaded_skipgram</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"naive_bayes_model.pkl"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">loaded_nb</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"scaler_skipgram.pkl"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">loaded_scaler</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Semua model berhasil di-load."</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Skip-Gram:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">loaded_skipgram</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Naive Bayes:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">loaded_nb</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Scaler:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">loaded_scaler</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model Skip-Gram berhasil disimpan.
+File: skipgram_model.pkl
+Model Naive Bayes berhasil disimpan.
+File: naive_bayes_model.pkl
+Scaler Skip-Gram berhasil disimpan.
+File: scaler_skipgram.pkl
+Semua model berhasil di-load.
+
+Skip-Gram:
+&lt;class 'gensim.models.word2vec.Word2Vec'&gt;
+
+Naive Bayes:
+&lt;class 'sklearn.naive_bayes.MultinomialNB'&gt;
+
+Scaler:
+&lt;class 'sklearn.preprocessing._data.MinMaxScaler'&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Tugas_3_Pencarian_%26_Penambangan_Web.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Klasifikasi Berita Menggunakan Model Word2Vec (Skip-Gram) dan Algoritma Gaussian Naive Bayes</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">Import Library</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membaca-dataset">Membaca Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cek-dataset">Cek Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-kolom-teks">Menentukan Kolom Teks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing-teks">Preprocessing Teks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tokenisasi">Tokenisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-test-split">Train Test Split</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tf-idf">TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-matriks-tf-idf">Melihat Matriks TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-tf-idf">Naive Bayes TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-skip-gram">Membuat Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#melihat-vektor-skip-gram">Melihat Vektor Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ukuran-matriks-skip-gram">Ukuran Matriks Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-vektor-dokumen-dari-skip-gram">Membuat Vektor Dokumen dari Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-vektor-skip-gram">Tabel Vektor Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-ukuran-tf-idf-dan-skip-gram">Perbandingan Ukuran TF-IDF dan Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-bayes-skip-gram">Naive Bayes Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-akurasi">Perbandingan Akurasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search-tf-idf-naive-bayes">Grid Search TF-IDF + Naive Bayes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-semua-grid-search-tf-idf">Hasil Semua Grid Search TF-IDF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search-skip-gram-naive-bayes">Grid Search Skip-Gram + Naive Bayes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-grid-search-skip-gram">Hasil Grid Search Skip-Gram</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-model-terbaik">Evaluasi Model Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-perbandingan-akhir">Tabel Perbandingan Akhir</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-report-model-terbaik">Classification Report Model Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-matrix">Confusion Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-model-skip-gram-final">Menentukan Model Skip-Gram Final</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#save-model-pkl">Save Model .pkl</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Bilqizah Rahma Ilayya Syahdewi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
