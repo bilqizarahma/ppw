@@ -302,7 +302,7 @@ if st.button(
                             f"""
                             <div class="card-finance">
                                 <h3 style="margin:0; color:#065F46;">💰 Kategori: FINANCE</h3>
-                                <p style="margin:5px 0 0 0; color:#10B981; font-weight:600;">Tingkat Keyakinan: {confidence * 100:.2f}%</p>
+                                <p style="margin:5px 0 0 0; color:#10B981; font-weight:600;">Tingkat Akurasi: {confidence * 100:.2f}%</p>
                             </div>
                             """,
                             unsafe_allow_html=True
