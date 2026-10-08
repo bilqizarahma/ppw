@@ -1,7 +1,7 @@
 streamlit
-joblib
 requests
 beautifulsoup4
-numpy
-scikit-learn
-gensim==4.3.3
+numpy==2.2.6
+scikit-learn==1.7.2
+gensim==4.4.0
+joblib==1.5.3
