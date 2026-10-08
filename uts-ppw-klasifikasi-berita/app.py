@@ -205,7 +205,7 @@ def cek_kategori_url(url):
 # TAMPILAN APLIKASI
 # ============================================================
 
-st.markdown('<p class="main-title">📰 Klasifikasi Berita Detik</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-title">📰 Klasifikasi Berita Detik.com</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">Aplikasi klasifikasi berita menggunakan <b>Skip-gram Word2Vec dan Naive Bayes</b>.</p>', unsafe_allow_html=True)
 
 
