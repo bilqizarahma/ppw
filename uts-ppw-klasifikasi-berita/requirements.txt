@@ -2,7 +2,7 @@ streamlit
 pandas
 numpy
 scikit-learn
-gensim
+gensim==4.3.3
 requests
 beautifulsoup4
 joblib
